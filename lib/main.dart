@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
 import 'package:flutter_3d_raycast_engine/mini_map_renderer.dart';
+import 'package:flutter_3d_raycast_engine/player.dart';
 import 'package:flutter_3d_raycast_engine/renderer.dart';
 
 void main() => runApp(const MainApp());
@@ -17,8 +18,7 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   Timer? _timer;
 
-  Offset playerPosition = const Offset(mapScale + 20, mapScale + 20);
-  double playerAngle = 0;
+  Player player = Player();
 
   int oldCycleTime = 0;
   int cycleCount = 0;
@@ -45,8 +45,7 @@ class _MainAppState extends State<MainApp> {
                   right: halfScreenSize.width - mapOffset,
                   child: CustomPaint(
                     painter: MiniMapRenderer(
-                      playerPosition: playerPosition,
-                      playerAngle: playerAngle,
+                      player: player,
                       map: map,
                     ),
                     size: halfScreenSize,

@@ -1,23 +1,20 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:flutter_3d_raycast_engine/player.dart';
 
 class MiniMapRenderer extends CustomPainter {
   const MiniMapRenderer({
-    required this.playerPosition,
-    required this.playerAngle,
+    required this.player,
     required this.map,
   });
 
-  final Offset playerPosition;
-  final double playerAngle;
+  final Player player;
   final List<List<int>> map;
 
   @override
   void paint(Canvas canvas, Size size) {
     _drawMap(canvas);
-    _drawPlayer(canvas);
+    player.draw(canvas);
   }
 
   void _drawMap(Canvas canvas) {
@@ -34,24 +31,6 @@ class MiniMapRenderer extends CustomPainter {
         );
       }
     }
-  }
-
-  void _drawPlayer(Canvas canvas) {
-    final Paint paint = Paint()
-      ..color = Colors.green
-      ..strokeWidth = 2;
-
-    final playerX = playerPosition.dx;
-    final playerY = playerPosition.dy;
-
-    canvas.drawCircle(playerPosition, 5, paint);
-
-    final playerDirection = Offset(
-      playerX + 10 * cos(playerAngle),
-      playerY + 10 * sin(playerAngle),
-    );
-
-    canvas.drawLine(playerPosition, playerDirection, paint);
   }
 
   @override
