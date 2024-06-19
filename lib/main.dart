@@ -17,6 +17,9 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   Timer? _timer;
 
+  Offset playerPosition = const Offset(mapScale + 20, mapScale + 20);
+  double playerAngle = 0;
+
   int oldCycleTime = 0;
   int cycleCount = 0;
   String fpsRate = 'Calculating...';
@@ -38,10 +41,14 @@ class _MainAppState extends State<MainApp> {
               children: [
                 const CustomPaint(painter: Renderer(), size: screenSize),
                 Positioned(
-                  top: margin,
-                  right: halfScreenSize.width - margin,
+                  top: mapOffset,
+                  right: halfScreenSize.width - mapOffset,
                   child: CustomPaint(
-                    painter: MiniMapRenderer(map),
+                    painter: MiniMapRenderer(
+                      playerPosition: playerPosition,
+                      playerAngle: playerAngle,
+                      map: map,
+                    ),
                     size: halfScreenSize,
                   ),
                 ),

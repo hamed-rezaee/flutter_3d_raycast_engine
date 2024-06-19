@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 const Size screenSize = Size(720, 480);
 const Size halfScreenSize = Size(360, 240);
-const double margin = 8;
 
 const double fps = 60;
 const int cycleDelay = 1000 ~/ fps;
@@ -11,6 +10,7 @@ const double mapSize = 16;
 const double mapScale = 10;
 const double mapRange = mapScale * mapSize;
 const double mapSpeed = mapScale / 5;
+const double mapOffset = 8;
 
 List<List<int>> map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
