@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:flutter_3d_raycast_engine/mini_map_renderer.dart';
 import 'package:flutter_3d_raycast_engine/renderer.dart';
 
 void main() => runApp(const MainApp());
@@ -32,10 +33,19 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) => MaterialApp(
         home: Scaffold(
           appBar: AppBar(title: Text('3D Raycast Engine ($fpsRate)')),
-          body: const Center(
-            child: CustomPaint(
-              painter: Renderer(),
-              size: screenSize,
+          body: Center(
+            child: Stack(
+              children: [
+                const CustomPaint(painter: Renderer(), size: screenSize),
+                Positioned(
+                  top: margin,
+                  right: halfScreenSize.width - margin,
+                  child: CustomPaint(
+                    painter: MiniMapRenderer(map),
+                    size: halfScreenSize,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
