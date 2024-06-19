@@ -33,11 +33,13 @@ class _MainAppState extends State<MainApp> {
   }
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(title: Text('3D Raycast Engine ($fpsRate)')),
-          body: Center(
-            child: Stack(
+  Widget build(BuildContext context) => KeyboardListener(
+        focusNode: FocusNode(),
+        onKeyEvent: player.handleKeyEvent,
+        child: MaterialApp(
+          home: Scaffold(
+            appBar: AppBar(title: Text('3D Raycast Engine ($fpsRate)')),
+            body: Stack(
               children: [
                 const CustomPaint(painter: Renderer(), size: screenSize),
                 Positioned(
