@@ -11,7 +11,7 @@ class Player {
   double angle = 0;
 
   void draw(Canvas canvas) {
-    final Paint paint = Paint()
+    final paint = Paint()
       ..color = Colors.green
       ..strokeWidth = mapScale / 3;
 
@@ -26,24 +26,26 @@ class Player {
   }
 
   List<Offset> castRay() {
-    final List<Offset> rays = [];
+    final rays = <Offset>[];
 
-    double startAngle = angle - halfFov;
-    double endAngle = angle + halfFov;
-    double rayStartX = (position.dx / mapScale).floor() * mapScale;
-    double rayStartY = (position.dy / mapScale).floor() * mapScale;
+    final startAngle = angle - halfFov;
+    final endAngle = angle + halfFov;
+    final rayStartX = (position.dx / mapScale).floor() * mapScale;
+    final rayStartY = (position.dy / mapScale).floor() * mapScale;
 
-    for (double currentAngle = startAngle;
+    for (var currentAngle = startAngle;
         currentAngle < endAngle;
         currentAngle += rayStep) {
-      double currentSin = sin(currentAngle);
+      var currentSin = sin(currentAngle);
       currentSin = currentSin != 0 ? currentSin : 0.000001;
 
-      double currentCos = cos(currentAngle);
+      var currentCos = cos(currentAngle);
       currentCos = currentCos != 0 ? currentCos : 0.000001;
 
-      double rayEndX = 0, rayEndY = 0, verticalDepth = 0;
-      int rayDirectionX = 0;
+      var rayEndX = 0.0;
+      var rayEndY = 0.0;
+      var verticalDepth = 0.0;
+      var rayDirectionX = 0;
 
       if (currentSin > 0) {
         rayEndX = rayStartX + mapScale;
@@ -53,18 +55,18 @@ class Player {
         rayDirectionX = -1;
       }
 
-      for (double offset = 0; offset < mapRange; offset += mapScale) {
+      for (var offset = 0.0; offset < mapRange; offset += mapScale) {
         verticalDepth = (rayEndX - position.dx) / currentSin;
         rayEndY = position.dy + verticalDepth * currentCos;
 
-        int mapTargetX = (rayEndX / mapScale).floor();
-        int mapTargetY = (rayEndY / mapScale).floor();
+        var mapTargetX = (rayEndX / mapScale).floor();
+        final mapTargetY = (rayEndY / mapScale).floor();
 
         if (currentSin <= 0) {
           mapTargetX += rayDirectionX;
         }
 
-        int targetSquare = mapTargetY * mapSize + mapTargetX;
+        final targetSquare = mapTargetY * mapSize + mapTargetX;
 
         if (targetSquare < 0 || targetSquare >= map.length) {
           break;
@@ -77,10 +79,10 @@ class Player {
         rayEndX += rayDirectionX * mapScale;
       }
 
-      double tempX = rayEndX;
-      double tempY = rayEndY;
+      final tempX = rayEndX;
+      final tempY = rayEndY;
 
-      double horizontalDepth = 0;
+      var horizontalDepth = 0.0;
       int rayDirectionY;
 
       if (currentCos > 0) {
@@ -91,18 +93,18 @@ class Player {
         rayDirectionY = -1;
       }
 
-      for (double offset = 0; offset < mapRange; offset += mapScale) {
+      for (var offset = 0.0; offset < mapRange; offset += mapScale) {
         horizontalDepth = (rayEndY - position.dy) / currentCos;
         rayEndX = position.dx + horizontalDepth * currentSin;
 
-        int mapTargetX = (rayEndX / mapScale).floor();
-        int mapTargetY = (rayEndY / mapScale).floor();
+        final mapTargetX = (rayEndX / mapScale).floor();
+        var mapTargetY = (rayEndY / mapScale).floor();
 
         if (currentCos <= 0) {
           mapTargetY += rayDirectionY;
         }
 
-        int targetSquare = mapTargetY * mapSize + mapTargetX;
+        final targetSquare = mapTargetY * mapSize + mapTargetX;
 
         if (targetSquare < 0 || targetSquare >= map.length) {
           break;
@@ -115,8 +117,8 @@ class Player {
         rayEndY += rayDirectionY * mapScale;
       }
 
-      double endX = verticalDepth < horizontalDepth ? tempX : rayEndX;
-      double endY = verticalDepth < horizontalDepth ? tempY : rayEndY;
+      final endX = verticalDepth < horizontalDepth ? tempX : rayEndX;
+      final endY = verticalDepth < horizontalDepth ? tempY : rayEndY;
 
       rays.add(Offset(endX, endY));
     }
@@ -125,7 +127,7 @@ class Player {
   }
 
   void drawRays(Canvas canvas, List<Offset> rays) {
-    final Paint paint = Paint()
+    final paint = Paint()
       ..color = Colors.yellow
       ..strokeWidth = 2;
 
@@ -135,10 +137,10 @@ class Player {
   }
 
   void handleKeyEvent(KeyEvent value) {
-    bool isRotateLeft = value.logicalKey == LogicalKeyboardKey.keyA;
-    bool isRotateRight = value.logicalKey == LogicalKeyboardKey.keyD;
-    bool isMoveForward = value.logicalKey == LogicalKeyboardKey.keyW;
-    bool isMoveBackward = value.logicalKey == LogicalKeyboardKey.keyS;
+    final isRotateLeft = value.logicalKey == LogicalKeyboardKey.keyA;
+    final isRotateRight = value.logicalKey == LogicalKeyboardKey.keyD;
+    final isMoveForward = value.logicalKey == LogicalKeyboardKey.keyW;
+    final isMoveBackward = value.logicalKey == LogicalKeyboardKey.keyS;
 
     if (isRotateLeft) {
       angle += 0.1;
@@ -170,8 +172,8 @@ class Player {
   }
 
   bool _isPositionValid(Offset position) {
-    final int row = (position.dy / mapScale).floor();
-    final int column = (position.dx / mapScale).floor();
+    final row = (position.dy / mapScale).floor();
+    final column = (position.dx / mapScale).floor();
 
     return map[row * mapSize + column] == 0;
   }

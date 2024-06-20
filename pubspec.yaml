@@ -1,10 +1,11 @@
 name: flutter_3d_raycast_engine
-description: "A new Flutter project."
-publish_to: 'none'
+description: "3D Raycast Engine in Flutter, using DDA(Digital Differential Analyzer) Algorithm."
+
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.4.1 <4.0.0'
+  sdk: ">=3.4.1 <4.0.0"
 
 dependencies:
   flutter:
@@ -13,7 +14,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  very_good_analysis: ^5.1.0
 
 flutter:
   uses-material-design: true

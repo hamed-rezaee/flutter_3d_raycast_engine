@@ -14,15 +14,17 @@ class MiniMapRenderer extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     _drawMap(canvas);
-    player.drawRays(canvas, player.castRay());
-    player.draw(canvas);
+
+    player
+      ..drawRays(canvas, player.castRay())
+      ..draw(canvas);
   }
 
   void _drawMap(Canvas canvas) {
-    final int size = map.length ~/ mapSize;
+    final size = map.length ~/ mapSize;
 
-    for (int row = 0; row < size; row++) {
-      for (int column = 0; column < size; column++) {
+    for (var row = 0; row < size; row++) {
+      for (var column = 0; column < size; column++) {
         canvas.drawRect(
           Rect.fromLTWH(
             column * mapScale,
