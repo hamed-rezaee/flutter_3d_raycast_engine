@@ -9,17 +9,20 @@ class MiniMapRenderer extends CustomPainter {
   });
 
   final Player player;
-  final List<List<int>> map;
+  final List<int> map;
 
   @override
   void paint(Canvas canvas, Size size) {
     _drawMap(canvas);
+    player.drawRays(canvas, player.castRay());
     player.draw(canvas);
   }
 
   void _drawMap(Canvas canvas) {
-    for (int row = 0; row < map.length; row++) {
-      for (int column = 0; column < map[row].length; column++) {
+    final int size = map.length ~/ mapSize;
+
+    for (int row = 0; row < size; row++) {
+      for (int column = 0; column < size; column++) {
         canvas.drawRect(
           Rect.fromLTWH(
             column * mapScale,
@@ -27,7 +30,9 @@ class MiniMapRenderer extends CustomPainter {
             mapScale + 1,
             mapScale + 1,
           ),
-          Paint()..color = (map[row][column] == 1 ? Colors.grey : Colors.white),
+          Paint()
+            ..color =
+                (map[row * mapSize + column] == 1) ? Colors.grey : Colors.white,
         );
       }
     }
