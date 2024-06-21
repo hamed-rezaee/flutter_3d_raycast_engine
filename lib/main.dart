@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:flutter_3d_raycast_engine/controller.dart';
 import 'package:flutter_3d_raycast_engine/mini_map_renderer.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
 import 'package:flutter_3d_raycast_engine/renderer.dart';
@@ -16,71 +18,63 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  Timer? _timer;
+  final Player player = Player(Controller());
 
-  Player player = Player();
-
-  int oldCycleTime = 0;
-  int cycleCount = 0;
-  String fpsRate = 'Calculating...';
+  bool showMiniMap = true;
 
   @override
   void initState() {
     super.initState();
 
-    _timer =
-        Timer.periodic(const Duration(milliseconds: cycleDelay), _gameLoop);
+    Timer.periodic(
+      const Duration(milliseconds: cycleDelay),
+      (_) => _gameLoop(),
+    );
   }
 
   @override
   Widget build(BuildContext context) => KeyboardListener(
         focusNode: FocusNode(),
-        onKeyEvent: player.handleKeyEvent,
+        onKeyEvent: (event) {
+          player.handleKeyEvent(event);
+
+          if (event.logicalKey == LogicalKeyboardKey.keyQ &&
+              event is KeyDownEvent) {
+            showMiniMap = !showMiniMap;
+          }
+        },
         child: MaterialApp(
           home: Scaffold(
-            appBar: AppBar(title: Text('3D Raycast Engine ($fpsRate)')),
             body: Stack(
               children: [
-                const CustomPaint(painter: Renderer(), size: screenSize),
-                Positioned(
-                  top: mapOffset,
-                  right: halfScreenSize.width - mapOffset,
-                  child: CustomPaint(
-                    painter: MiniMapRenderer(
-                      player: player,
-                      map: map,
+                Column(
+                  children: [
+                    CustomPaint(
+                      painter: Renderer(player: player),
+                      size: screenSize,
                     ),
-                    size: halfScreenSize,
-                  ),
+                  ],
                 ),
+                if (showMiniMap)
+                  Positioned(
+                    top: mapOffset,
+                    right: halfScreenSize.width - mapOffset,
+                    child: CustomPaint(
+                      painter: MiniMapRenderer(
+                        player: player,
+                        map: map,
+                      ),
+                      size: halfScreenSize,
+                    ),
+                  ),
               ],
             ),
           ),
         ),
       );
 
-  void _gameLoop(Timer timer) {
-    _calculateFPS();
-  }
-
-  void _calculateFPS() {
-    cycleCount++;
-
-    if (cycleCount >= fps) {
-      cycleCount = 0;
-    }
-
-    final currentTime = DateTime.now().millisecondsSinceEpoch;
-    final timeDifference = currentTime - oldCycleTime;
-
-    oldCycleTime = currentTime;
-
-    if (currentTime % fps == 0) {
-      fpsRate = '${(1000 / timeDifference).toStringAsFixed(2)} FPS';
-    }
-
-    _timer?.cancel();
-    _timer = Timer(const Duration(milliseconds: cycleDelay), _calculateFPS);
+  void _gameLoop() {
+    player.update();
 
     setState(() {});
   }
