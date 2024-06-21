@@ -3,11 +3,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:flutter_3d_raycast_engine/controller.dart';
+import 'package:flutter_3d_raycast_engine/projection.dart';
+import 'package:flutter_3d_raycast_engine/ray.dart';
 
 class Player {
-  Player();
+  Player(this.controller);
 
-  Offset position = const Offset(mapScale + 20, mapScale + 20);
+  Controller controller;
+  Offset position = const Offset(mapScale * 2, mapScale * 2);
   double angle = 0;
 
   void draw(Canvas canvas) {
@@ -25,26 +29,29 @@ class Player {
     canvas.drawLine(position, playerDirection, paint);
   }
 
-  List<Offset> castRay() {
-    final rays = <Offset>[];
+  ({List<Ray> rays, List<Projection> projections}) castRay() {
+    final rays = <Ray>[];
+    final projections = <Projection>[];
 
     final startAngle = angle - halfFov;
     final endAngle = angle + halfFov;
     final rayStartX = (position.dx / mapScale).floor() * mapScale;
     final rayStartY = (position.dy / mapScale).floor() * mapScale;
 
+    var verticalDepth = 0.0;
+    var horizontalDepth = 0.0;
+
     for (var currentAngle = startAngle;
         currentAngle < endAngle;
         currentAngle += rayStep) {
       var currentSin = sin(currentAngle);
-      currentSin = currentSin != 0 ? currentSin : 0.000001;
+      currentSin = currentSin != 0 ? currentSin : epsilon;
 
       var currentCos = cos(currentAngle);
-      currentCos = currentCos != 0 ? currentCos : 0.000001;
+      currentCos = currentCos != 0 ? currentCos : epsilon;
 
       var rayEndX = 0.0;
       var rayEndY = 0.0;
-      var verticalDepth = 0.0;
       var rayDirectionX = 0;
 
       if (currentSin > 0) {
@@ -82,7 +89,6 @@ class Player {
       final tempX = rayEndX;
       final tempY = rayEndY;
 
-      var horizontalDepth = 0.0;
       int rayDirectionY;
 
       if (currentCos > 0) {
@@ -120,47 +126,68 @@ class Player {
       final endX = verticalDepth < horizontalDepth ? tempX : rayEndX;
       final endY = verticalDepth < horizontalDepth ? tempY : rayEndY;
 
-      rays.add(Offset(endX, endY));
+      var depth =
+          verticalDepth < horizontalDepth ? verticalDepth : horizontalDepth;
+      depth *= cos(angle - currentAngle);
+
+      final wallHeight = min(mapScale * wallHeightMultiplier / depth, height);
+
+      rays.add(Ray(start: position, end: Offset(endX, endY)));
+
+      projections.add(
+        Projection(
+          depth: depth,
+          wallHeight: wallHeight,
+          isVertical: verticalDepth < horizontalDepth,
+        ),
+      );
     }
 
-    return rays;
+    return (rays: rays, projections: projections);
   }
 
-  void drawRays(Canvas canvas, List<Offset> rays) {
-    final paint = Paint()
-      ..color = Colors.yellow
-      ..strokeWidth = 2;
+  void handleKeyEvent(KeyEvent event) {
+    if (event.logicalKey == LogicalKeyboardKey.keyW ||
+        event.logicalKey == LogicalKeyboardKey.arrowUp) {
+      controller.forward = event is KeyRepeatEvent || event is KeyDownEvent;
+    }
 
-    for (final ray in rays) {
-      canvas.drawLine(position, ray, paint);
+    if (event.logicalKey == LogicalKeyboardKey.keyS ||
+        event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      controller.backward = event is KeyRepeatEvent || event is KeyDownEvent;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.keyA ||
+        event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+      controller.rotateLeft = event is KeyRepeatEvent || event is KeyDownEvent;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.keyD ||
+        event.logicalKey == LogicalKeyboardKey.arrowRight) {
+      controller.rotateRight = event is KeyRepeatEvent || event is KeyDownEvent;
     }
   }
 
-  void handleKeyEvent(KeyEvent value) {
-    final isRotateLeft = value.logicalKey == LogicalKeyboardKey.keyA;
-    final isRotateRight = value.logicalKey == LogicalKeyboardKey.keyD;
-    final isMoveForward = value.logicalKey == LogicalKeyboardKey.keyW;
-    final isMoveBackward = value.logicalKey == LogicalKeyboardKey.keyS;
-
-    if (isRotateLeft) {
-      angle += 0.1;
-    } else if (isRotateRight) {
-      angle -= 0.1;
+  void update() {
+    if (controller.rotateLeft) {
+      angle += playerRotationSpeed;
+    } else if (controller.rotateRight) {
+      angle -= playerRotationSpeed;
     }
 
-    if (isMoveForward) {
+    if (controller.forward) {
       final nextPosition = Offset(
-        position.dx + sin(angle) * mapSpeed,
-        position.dy + cos(angle) * mapSpeed,
+        position.dx + sin(angle) * playerSpeed,
+        position.dy + cos(angle) * playerSpeed,
       );
 
       if (_isPositionValid(nextPosition)) {
         position = nextPosition;
       }
-    } else if (isMoveBackward) {
+    } else if (controller.backward) {
       final nextPosition = Offset(
-        position.dx - sin(angle) * mapSpeed,
-        position.dy - cos(angle) * mapSpeed,
+        position.dx - sin(angle) * playerSpeed,
+        position.dy - cos(angle) * playerSpeed,
       );
 
       if (_isPositionValid(nextPosition)) {
