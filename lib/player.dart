@@ -12,11 +12,11 @@ class Player {
 
   Controller controller;
   Offset position = const Offset(mapScale * 2, mapScale * 2);
-  double angle = 0;
+  double angle = pi / 4;
 
   void draw(Canvas canvas) {
     final paint = Paint()
-      ..color = Colors.green
+      ..color = Colors.black
       ..strokeWidth = mapScale / 3;
 
     canvas.drawCircle(position, mapScale / 2, paint);
@@ -147,23 +147,19 @@ class Player {
   }
 
   void handleKeyEvent(KeyEvent event) {
-    if (event.logicalKey == LogicalKeyboardKey.keyW ||
-        event.logicalKey == LogicalKeyboardKey.arrowUp) {
+    if (event.logicalKey == LogicalKeyboardKey.keyW) {
       controller.forward = event is KeyRepeatEvent || event is KeyDownEvent;
     }
 
-    if (event.logicalKey == LogicalKeyboardKey.keyS ||
-        event.logicalKey == LogicalKeyboardKey.arrowDown) {
+    if (event.logicalKey == LogicalKeyboardKey.keyS) {
       controller.backward = event is KeyRepeatEvent || event is KeyDownEvent;
     }
 
-    if (event.logicalKey == LogicalKeyboardKey.keyA ||
-        event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+    if (event.logicalKey == LogicalKeyboardKey.keyA) {
       controller.rotateLeft = event is KeyRepeatEvent || event is KeyDownEvent;
     }
 
-    if (event.logicalKey == LogicalKeyboardKey.keyD ||
-        event.logicalKey == LogicalKeyboardKey.arrowRight) {
+    if (event.logicalKey == LogicalKeyboardKey.keyD) {
       controller.rotateRight = event is KeyRepeatEvent || event is KeyDownEvent;
     }
   }
