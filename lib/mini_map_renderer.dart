@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:flutter_3d_raycast_engine/enums.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
 
 class MiniMapRenderer extends CustomPainter {
@@ -20,20 +21,25 @@ class MiniMapRenderer extends CustomPainter {
   }
 
   void _drawMap(Canvas canvas) {
+    canvas.drawRect(
+      const Rect.fromLTWH(
+        -margin,
+        -margin,
+        mapSize * mapScale + margin * 2,
+        mapSize * mapScale + margin * 2,
+      ),
+      Paint()..color = Colors.white,
+    );
+
     final size = map.length ~/ mapSize;
 
     for (var row = 0; row < size; row++) {
       for (var column = 0; column < size; column++) {
         canvas.drawRect(
-          Rect.fromLTWH(
-            column * mapScale,
-            row * mapScale,
-            mapScale + 1,
-            mapScale + 1,
-          ),
+          Rect.fromLTWH(column * mapScale, row * mapScale, mapScale, mapScale),
           Paint()
             ..color =
-                (map[row * mapSize + column] == 1) ? Colors.grey : Colors.white,
+                MaterialInformation.values[map[row * mapSize + column]].color,
         );
       }
     }

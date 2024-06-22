@@ -14,12 +14,12 @@ class Projection {
   final bool isVertical;
 
   void draw(Canvas canvas, double offset) {
-    final maxDepth = mapScale * mapSize + epsilon;
+    const maxDepth = mapScale * mapSize + epsilon;
 
     final paint = Paint()
       ..color = isVertical
           ? getColorBasedOnDepth(
-              color: Colors.grey[200]!,
+              color: Colors.grey[300]!,
               depth: depth,
               maxDepth: maxDepth,
             )
@@ -33,5 +33,11 @@ class Projection {
       Rect.fromLTWH(offset, (height - wallHeight) / 2, 1, wallHeight),
       paint,
     );
+
+    drawTexture(canvas: canvas);
   }
+
+  void drawTexture({
+    required Canvas canvas,
+  }) {}
 }

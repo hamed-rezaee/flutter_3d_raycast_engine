@@ -9,7 +9,7 @@ class Ray {
   void draw(Canvas canvas) {
     final paint = Paint()
       ..color = Colors.yellow
-      ..strokeWidth = 2;
+      ..strokeWidth = 0.1;
 
     canvas.drawLine(start, end, paint);
   }
