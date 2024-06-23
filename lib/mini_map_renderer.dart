@@ -22,10 +22,10 @@ class MiniMapRenderer extends CustomPainter {
   void _drawMap(Canvas canvas) {
     canvas.drawRect(
       const Rect.fromLTWH(
-        -margin,
-        -margin,
-        mapSize * mapScale + margin * 2,
-        mapSize * mapScale + margin * 2,
+        -margin / 2,
+        -margin / 2,
+        mapSize * mapScale + margin,
+        mapSize * mapScale + margin,
       ),
       Paint()..color = Colors.white,
     );

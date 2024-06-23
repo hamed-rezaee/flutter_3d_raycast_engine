@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/asset.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:flutter_3d_raycast_engine/helpers.dart';
 
 const Size size = Size(editorScale * mapSize, editorScale * mapSize);
 
@@ -56,21 +57,53 @@ class _MapEditorState extends State<MapEditor> {
           Listener(
             onPointerMove: _onPointerMoveHandler,
             onPointerDown: _onPointerDownHandler,
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomPaint(painter: MapEditorPainter(), size: size),
-                const SizedBox(width: margin * 2),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    for (final asset in assets)
-                      _assetPicker(
-                        asset: asset,
-                        onTap: () =>
-                            setState(() => selectedMaterial = asset.index),
-                      ),
+                    CustomPaint(painter: MapEditorPainter(), size: size),
+                    const SizedBox(width: margin * 2),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final asset in assets)
+                          _assetPicker(
+                            asset: asset,
+                            onTap: () =>
+                                setState(() => selectedMaterial = asset.index),
+                          ),
+                      ],
+                    ),
                   ],
                 ),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.save),
+                      onPressed: () => saveMap(map),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        map
+                          ..clear()
+                          ..addAll(await loadMap());
+                        setState(() {});
+                      },
+                      icon: const Icon(Icons.restore),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        map
+                          ..clear()
+                          ..addAll(generateMap());
+
+                        setState(() {});
+                      },
+                      icon: const Icon(Icons.refresh),
+                    ),
+                  ],
+                )
               ],
             ),
           ),

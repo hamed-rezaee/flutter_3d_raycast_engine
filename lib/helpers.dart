@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Color getColorBasedOnDepth({
   required Color color,
@@ -52,4 +53,24 @@ Future<ui.Image> loadImageFromAsset(String assetName) async {
   final frame = await codec.getNextFrame();
 
   return frame.image;
+}
+
+List<int> generateMap() => List.generate(
+      mapSize * mapSize,
+      (index) => index % mapSize == 0 ||
+              index % mapSize == mapSize - 1 ||
+              index < mapSize ||
+              index >= mapSize * (mapSize - 1)
+          ? assets.last.index
+          : assets.first.index,
+    );
+
+Future<void> saveMap(List<int> map) async =>
+    (await SharedPreferences.getInstance())
+        .setStringList('map', map.map((e) => e.toString()).toList());
+
+Future<List<int>> loadMap() async {
+  final map = (await SharedPreferences.getInstance()).getStringList('map');
+
+  return map?.map(int.parse).toList() ?? generateMap();
 }

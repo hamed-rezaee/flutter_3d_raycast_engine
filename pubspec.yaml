@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  shared_preferences: ^2.2.3
   statsfl: ^2.3.0
 
 dev_dependencies:

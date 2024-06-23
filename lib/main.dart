@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_3d_raycast_engine/asset.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
 import 'package:flutter_3d_raycast_engine/controller.dart';
+import 'package:flutter_3d_raycast_engine/helpers.dart';
 import 'package:flutter_3d_raycast_engine/map_editor.dart';
 import 'package:flutter_3d_raycast_engine/mini_map_renderer.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
@@ -14,6 +15,7 @@ import 'package:statsfl/statsfl.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  map.addAll(await loadMap());
   assets.addAll(await Asset.loadAssets());
 
   runApp(const MainApp());
@@ -85,7 +87,7 @@ class _MainAppState extends State<MainApp> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: const EdgeInsets.all(margin * 4),
+                      padding: const EdgeInsets.all(margin * 2),
                       child: CustomPaint(
                         painter: MiniMapRenderer(player: player, map: map),
                       ),
