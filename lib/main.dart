@@ -2,15 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_3d_raycast_engine/asset.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
 import 'package:flutter_3d_raycast_engine/controller.dart';
 import 'package:flutter_3d_raycast_engine/map_editor.dart';
 import 'package:flutter_3d_raycast_engine/mini_map_renderer.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
 import 'package:flutter_3d_raycast_engine/renderer.dart';
+import 'package:statsfl/statsfl.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  assets.addAll(await Asset.loadAssets());
 
   runApp(const MainApp());
 }
@@ -26,6 +30,7 @@ class _MainAppState extends State<MainApp> {
   final Player player = Player(Controller());
 
   bool showMiniMap = true;
+  bool showStats = true;
 
   @override
   void initState() {
@@ -47,17 +52,28 @@ class _MainAppState extends State<MainApp> {
               event is KeyDownEvent) {
             showMiniMap = !showMiniMap;
           }
+
+          if (event.logicalKey == LogicalKeyboardKey.keyE &&
+              event is KeyDownEvent) {
+            showStats = !showStats;
+          }
         },
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           home: Scaffold(
             body: Stack(
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomPaint(
-                      painter: Renderer(player: player),
-                      size: screenSize,
+                    Padding(
+                      padding: const EdgeInsets.all(margin),
+                      child: ClipRect(
+                        child: CustomPaint(
+                          painter: Renderer(player: player),
+                          size: screenSize,
+                        ),
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.all(margin),
@@ -75,6 +91,8 @@ class _MainAppState extends State<MainApp> {
                       ),
                     ),
                   ),
+                if (showStats)
+                  Align(alignment: Alignment.topRight, child: StatsFl()),
               ],
             ),
           ),
