@@ -18,50 +18,61 @@ class _MapEditorState extends State<MapEditor> {
   Widget build(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Help',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: margin),
-          const Divider(),
-          const SizedBox(height: margin),
-          const Text(
-            '\t- Press W, A, S, D to move the player.\n\t- Press Q to hide Minimap. \n\t- Select a material and draw on the map. Left click to draw and right click to erase.',
-          ),
-          const SizedBox(height: margin),
-          const Divider(),
-          const SizedBox(height: margin),
-          const Text(
-            'Map Editor',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: margin),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Listener(
-                onPointerMove: _onPointerMoveHandler,
-                onPointerDown: _onPointerDownHandler,
-                child: Row(
+          ..._buildInformationSection(),
+          _buildEditor(),
+        ],
+      );
+
+  List<Widget> _buildInformationSection() => [
+        const Text(
+          'Help',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: margin),
+        const Divider(),
+        const SizedBox(height: margin),
+        const Text(
+          '\t- Press W, A, S, D to move the player.\n\t- Press Q to hide Minimap. \n\t- Press E to hide Stats.',
+          style: TextStyle(fontSize: 12),
+        ),
+        const SizedBox(height: margin),
+        const Divider(),
+        const SizedBox(height: margin),
+        const Text(
+          'Map Editor',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: margin),
+        const Text(
+          '\t- Select a material, left click to draw and right click to erase.',
+          style: TextStyle(fontSize: 12),
+        ),
+        const SizedBox(height: margin),
+      ];
+
+  Widget _buildEditor() => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Listener(
+            onPointerMove: _onPointerMoveHandler,
+            onPointerDown: _onPointerDownHandler,
+            child: Row(
+              children: [
+                CustomPaint(painter: MapEditorPainter(), size: size),
+                const SizedBox(width: margin * 2),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomPaint(painter: MapEditorPainter(), size: size),
-                    const SizedBox(width: margin * 2),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (final asset in assets)
-                          _assetPicker(
-                            asset: asset,
-                            onTap: () => setState(
-                              () => selectedMaterial = asset.index,
-                            ),
-                          ),
-                      ],
-                    ),
+                    for (final asset in assets)
+                      _assetPicker(
+                        asset: asset,
+                        onTap: () =>
+                            setState(() => selectedMaterial = asset.index),
+                      ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       );
@@ -88,10 +99,7 @@ class _MapEditorState extends State<MapEditor> {
     }
   }
 
-  Widget _assetPicker({
-    required Asset asset,
-    required VoidCallback onTap,
-  }) =>
+  Widget _assetPicker({required Asset asset, required VoidCallback onTap}) =>
       GestureDetector(
         onTap: onTap,
         child: Row(

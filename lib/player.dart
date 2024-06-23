@@ -16,7 +16,7 @@ class Player {
 
   void draw(Canvas canvas) {
     final paint = Paint()
-      ..color = Colors.black
+      ..color = Colors.red
       ..strokeWidth = playerRadius;
 
     canvas.drawCircle(position, mapScale / 2, paint);
