@@ -32,7 +32,7 @@ flutter run
 
 ## Screenshots
 
-![Demo](flutter_3d_raycast_engine.mp4)
+![Demo](flutter_3d_raycast_engine.gif)
 
 ## License
 
