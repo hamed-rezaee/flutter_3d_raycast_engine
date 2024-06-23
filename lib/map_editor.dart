@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_3d_raycast_engine/asset.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
-import 'package:flutter_3d_raycast_engine/enums.dart';
 
 const Size size = Size(editorScale * mapSize, editorScale * mapSize);
 
@@ -12,29 +12,58 @@ class MapEditor extends StatefulWidget {
 }
 
 class _MapEditorState extends State<MapEditor> {
-  int selectedMaterial = 1;
+  int selectedMaterial = assets.last.index;
 
   @override
-  Widget build(BuildContext context) => Listener(
-        onPointerMove: _onPointerMoveHandler,
-        onPointerDown: _onPointerDownHandler,
-        child: Row(
-          children: [
-            CustomPaint(painter: MapEditorPainter(), size: size),
-            const SizedBox(width: margin),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (final material in MaterialInformation.values)
-                  _materialPicker(
-                    material: material,
-                    onTap: () =>
-                        setState(() => selectedMaterial = material.index),
-                  ),
-              ],
-            ),
-          ],
-        ),
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Help',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: margin),
+          const Divider(),
+          const SizedBox(height: margin),
+          const Text(
+            '\t- Press W, A, S, D to move the player.\n\t- Press Q to hide Minimap. \n\t- Select a material and draw on the map. Left click to draw and right click to erase.',
+          ),
+          const SizedBox(height: margin),
+          const Divider(),
+          const SizedBox(height: margin),
+          const Text(
+            'Map Editor',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: margin),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Listener(
+                onPointerMove: _onPointerMoveHandler,
+                onPointerDown: _onPointerDownHandler,
+                child: Row(
+                  children: [
+                    CustomPaint(painter: MapEditorPainter(), size: size),
+                    const SizedBox(width: margin * 2),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final asset in assets)
+                          _assetPicker(
+                            asset: asset,
+                            onTap: () => setState(
+                              () => selectedMaterial = asset.index,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       );
 
   void _onPointerMoveHandler(PointerEvent event) {
@@ -59,8 +88,8 @@ class _MapEditorState extends State<MapEditor> {
     }
   }
 
-  Widget _materialPicker({
-    required MaterialInformation material,
+  Widget _assetPicker({
+    required Asset asset,
     required VoidCallback onTap,
   }) =>
       GestureDetector(
@@ -71,10 +100,10 @@ class _MapEditorState extends State<MapEditor> {
               width: 16,
               height: 16,
               decoration: BoxDecoration(
-                color: material.color,
+                color: asset.color,
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
-                  color: selectedMaterial == material.index
+                  color: selectedMaterial == asset.index
                       ? Colors.black
                       : Colors.transparent,
                 ),
@@ -82,10 +111,10 @@ class _MapEditorState extends State<MapEditor> {
             ),
             const SizedBox(width: margin),
             Text(
-              material.name,
+              asset.name,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: selectedMaterial == material.index
+                color: selectedMaterial == asset.index
                     ? Colors.green
                     : Colors.black,
               ),
@@ -112,9 +141,7 @@ class MapEditorPainter extends CustomPainter {
               editorScale,
               editorScale,
             ),
-            Paint()
-              ..color =
-                  MaterialInformation.values[map[row * mapSize + column]].color,
+            Paint()..color = assets[map[row * mapSize + column]].color,
           )
           ..drawRect(
             Rect.fromLTWH(

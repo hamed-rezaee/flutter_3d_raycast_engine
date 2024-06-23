@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:ui' as ui;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/constants.dart';
 
@@ -18,4 +22,34 @@ Color getColorBasedOnDepth({
   blue = blue.clamp(0, 255);
 
   return Color.fromARGB(255, red, green, blue);
+}
+
+Future<ui.Image> loadImageFromAsset(String assetName) async {
+  if (kIsWeb) {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    final image = AssetImage(assetName);
+    final key = await image.obtainKey(ImageConfiguration.empty);
+
+    final completer = Completer<ui.Image>();
+    image
+        .loadBuffer(
+          key,
+          // ignore: deprecated_member_use
+          PaintingBinding.instance.instantiateImageCodecFromBuffer,
+        )
+        .addListener(
+          ImageStreamListener(
+            (image, synchronousCall) => completer.complete(image.image),
+          ),
+        );
+
+    return completer.future;
+  }
+
+  final buffer = await ui.ImmutableBuffer.fromAsset(assetName);
+  final codec = await ui.instantiateImageCodecFromBuffer(buffer);
+  final frame = await codec.getNextFrame();
+
+  return frame.image;
 }
