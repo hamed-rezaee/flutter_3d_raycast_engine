@@ -48,7 +48,7 @@ The map editor allows you to create custom maps interactively.
 
 ## Demo
 
-![Demo](flutter_3d_raycast_engine.mp4)
+![Demo](flutter_3d_raycast_engine.gif)
 
 ## License
 
