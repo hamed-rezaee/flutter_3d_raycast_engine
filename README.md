@@ -4,11 +4,12 @@ This project implements a 3D raycasting engine in Flutter, allowing you to simul
 
 ## Features
 
-- **Raycasting Rendering:** Simulates 3D graphics using 2D projections and raycasting.
+- **Raycasting Rendering:** Simulates 3D graphics using 2D projections and raycasting, based on DDA(Digital Differential Analyzer) algorithm.
 - **Player Movement:** Move the player using W, A, S, D keys.
 - **Map Editing:** Includes a map editor to create custom maps interactively.
 - **Mini Map:** Toggleable minimap for navigation.
 - **Texture Rendering:** Toggle to enable/disable texture rendering on walls.
+- **Shadow Casting:** Renders shadows based on the distance from the player.
 
 ## Getting Started
 
@@ -30,9 +31,24 @@ cd flutter_3d_raycasting
 flutter run
 ```
 
-## Screenshots
+## Controls
 
-![Demo](flutter_3d_raycast_engine.gif)
+- **Move Forward:** W
+- **Move Backward:** S
+- **Strafe Left:** A
+- **Strafe Right:** D
+- **Toggle Minimap:** 1
+- **Toggle Textures:** 2
+- **Toggle Status:** 3
+
+## Map Editor
+
+The map editor allows you to create custom maps interactively.
+
+
+## Demo
+
+![Demo](flutter_3d_raycast_engine.mp4)
 
 ## License
 
