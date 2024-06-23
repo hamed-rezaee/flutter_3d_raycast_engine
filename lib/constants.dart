@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_3d_raycast_engine/asset.dart';
@@ -34,5 +36,7 @@ const double infinity = 10000;
 final List<int> map = [];
 
 const Offset playerPosition = Offset(mapSize / 2, mapSize / 2);
+
+late ui.Image playerSprite;
 
 final List<Asset> assets = [];

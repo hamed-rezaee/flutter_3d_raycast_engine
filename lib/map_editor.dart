@@ -33,7 +33,7 @@ class _MapEditorState extends State<MapEditor> {
         const Divider(),
         const SizedBox(height: margin),
         const Text(
-          '\t- Press W, A, S, D to move the player.\n\t- Press Q to hide Minimap. \n\t- Press E to hide Stats.',
+          '\t- Press W, A, S, D to move the player\n\t- Press 1 to toggle Minimap\n\t- Press 2 to toggle texture \n\t- Press 3 to toggle Stats',
           style: TextStyle(fontSize: 12),
         ),
         const SizedBox(height: margin),
@@ -45,7 +45,7 @@ class _MapEditorState extends State<MapEditor> {
         ),
         const SizedBox(height: margin),
         const Text(
-          '\t- Select a material, left click to draw and right click to erase.',
+          '\t- Select a material, left click to draw and right click to erase',
           style: TextStyle(fontSize: 12),
         ),
         const SizedBox(height: margin),
@@ -103,7 +103,7 @@ class _MapEditorState extends State<MapEditor> {
                       icon: const Icon(Icons.refresh),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),

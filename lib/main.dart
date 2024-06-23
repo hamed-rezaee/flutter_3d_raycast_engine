@@ -15,6 +15,7 @@ import 'package:statsfl/statsfl.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  playerSprite = await loadImageFromAsset('assets/textures/pistol.png');
   map.addAll(await loadMap());
   assets.addAll(await Asset.loadAssets());
 
@@ -32,6 +33,7 @@ class _MainAppState extends State<MainApp> {
   final Player player = Player(Controller());
 
   bool showMiniMap = true;
+  bool enableTexture = true;
   bool showStats = true;
 
   @override
@@ -50,12 +52,17 @@ class _MainAppState extends State<MainApp> {
         onKeyEvent: (event) {
           player.handleKeyEvent(event);
 
-          if (event.logicalKey == LogicalKeyboardKey.keyQ &&
+          if (event.logicalKey == LogicalKeyboardKey.digit1 &&
               event is KeyDownEvent) {
             showMiniMap = !showMiniMap;
           }
 
-          if (event.logicalKey == LogicalKeyboardKey.keyE &&
+          if (event.logicalKey == LogicalKeyboardKey.digit2 &&
+              event is KeyDownEvent) {
+            enableTexture = !enableTexture;
+          }
+
+          if (event.logicalKey == LogicalKeyboardKey.digit3 &&
               event is KeyDownEvent) {
             showStats = !showStats;
           }
@@ -70,10 +77,17 @@ class _MainAppState extends State<MainApp> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(margin),
-                      child: ClipRect(
-                        child: CustomPaint(
-                          painter: Renderer(player: player),
-                          size: screenSize,
+                      child: StatsFl(
+                        isEnabled: showStats,
+                        align: Alignment.topRight,
+                        child: ClipRect(
+                          child: CustomPaint(
+                            painter: Renderer(
+                              player: player,
+                              enableTexture: enableTexture,
+                            ),
+                            size: screenSize,
+                          ),
                         ),
                       ),
                     ),
@@ -93,8 +107,6 @@ class _MainAppState extends State<MainApp> {
                       ),
                     ),
                   ),
-                if (showStats)
-                  Align(alignment: Alignment.topRight, child: StatsFl()),
               ],
             ),
           ),
