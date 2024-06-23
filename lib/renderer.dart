@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_3d_raycast_engine/enums.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
 
 class Renderer extends CustomPainter {
@@ -17,28 +16,22 @@ class Renderer extends CustomPainter {
   void _drawSky(Canvas canvas, Size size) => canvas.drawRect(
         Rect.fromLTWH(0, 0, size.width, size.height / 2),
         Paint()
-          ..color = MaterialInformation.sky.color
+          ..color = Colors.black
           ..shader = LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              MaterialInformation.sky.color,
-              MaterialInformation.sky.color.withOpacity(0.1),
-            ],
+            colors: [Colors.black.withOpacity(0.5), Colors.black],
           ).createShader(Rect.fromLTWH(0, 0, size.width, size.height / 2)),
       );
 
   void _drawGround(Canvas canvas, Size size) => canvas.drawRect(
         Rect.fromLTWH(0, size.height / 2, size.width, size.height / 2),
         Paint()
-          ..color = MaterialInformation.ground.color
+          ..color = Colors.grey
           ..shader = LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              MaterialInformation.ground.color.withOpacity(0.5),
-              MaterialInformation.ground.color,
-            ],
+            colors: [Colors.grey, Colors.grey.withOpacity(0.8)],
           ).createShader(
             Rect.fromLTWH(0, size.height / 2, size.width, size.height / 2),
           ),

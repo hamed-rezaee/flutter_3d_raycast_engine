@@ -17,7 +17,7 @@ class Player {
   void draw(Canvas canvas) {
     final paint = Paint()
       ..color = Colors.black
-      ..strokeWidth = mapScale / 3;
+      ..strokeWidth = playerRadius;
 
     canvas.drawCircle(position, mapScale / 2, paint);
 
@@ -44,6 +44,9 @@ class Player {
     for (var currentAngle = startAngle;
         currentAngle < endAngle;
         currentAngle += rayStep) {
+      var textureY = 0;
+      var textureX = 0;
+
       var currentSin = sin(currentAngle);
       currentSin = currentSin != 0 ? currentSin : epsilon;
 
@@ -80,6 +83,8 @@ class Player {
         }
 
         if (map[targetSquare] != 0) {
+          textureY = map[targetSquare];
+
           break;
         }
 
@@ -117,6 +122,8 @@ class Player {
         }
 
         if (map[targetSquare] != 0) {
+          textureX = map[targetSquare];
+
           break;
         }
 
@@ -130,14 +137,18 @@ class Player {
           verticalDepth < horizontalDepth ? verticalDepth : horizontalDepth;
       depth *= cos(angle - currentAngle);
 
-      final wallHeight = min(mapScale * wallHeightMultiplier / depth, height);
+      final wallHeight = min(mapScale * wallHeightMultiplier / depth, infinity);
+      final isVertical = verticalDepth > horizontalDepth;
 
       rays.add(Ray(start: position, end: Offset(endX, endY)));
 
       projections.add(
         Projection(
+          textureIndex: isVertical ? textureX : textureY,
           depth: depth,
           wallHeight: wallHeight,
+          textureOffset:
+              _calculateTextureOffset(isVertical, endY, endX).floorToDouble(),
           isVertical: verticalDepth < horizontalDepth,
         ),
       );
@@ -145,6 +156,9 @@ class Player {
 
     return (rays: rays, projections: projections);
   }
+
+  double _calculateTextureOffset(bool isVertical, double endY, double endX) =>
+      (isVertical ? endX : endY) / mapScale * textureScale;
 
   void handleKeyEvent(KeyEvent event) {
     if (event.logicalKey == LogicalKeyboardKey.keyW) {
@@ -195,9 +209,14 @@ class Player {
   }
 
   bool _isPositionValid(Offset position) {
-    final row = (position.dy / mapScale).floor();
-    final column = (position.dx / mapScale).floor();
+    final rowLeft = ((position.dy - playerRadius) / mapScale).floor();
+    final columnTop = ((position.dx - playerRadius) / mapScale).floor();
+    final rowRight = ((position.dy + playerRadius) / mapScale).floor();
+    final columnBottom = ((position.dx + playerRadius) / mapScale).floor();
 
-    return map[row * mapSize + column] == 0;
+    return map[rowLeft * mapSize + columnTop] == 0 &&
+        map[rowLeft * mapSize + columnBottom] == 0 &&
+        map[rowRight * mapSize + columnTop] == 0 &&
+        map[rowRight * mapSize + columnBottom] == 0;
   }
 }
