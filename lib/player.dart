@@ -2,16 +2,17 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/controller.dart';
 import 'package:flutter_3d_raycast_engine/projection.dart';
 import 'package:flutter_3d_raycast_engine/ray.dart';
+import 'package:flutter_3d_raycast_engine/vector.dart';
 
 class Player {
   Player(this.controller);
 
   Controller controller;
-  Offset position = const Offset(mapScale * 2, mapScale * 2);
+  Vector position = Vector(x: mapScale * 2, y: mapScale * 2);
   double angle = pi / 4;
 
   void draw(Canvas canvas) {
@@ -19,14 +20,14 @@ class Player {
       ..color = Colors.red
       ..strokeWidth = playerRadius;
 
-    canvas.drawCircle(position, mapScale / 2, paint);
+    canvas.drawCircle(position.toOffset, mapScale / 2, paint);
 
-    final playerDirection = Offset(
-      position.dx + sin(angle) * mapScale,
-      position.dy + cos(angle) * mapScale,
+    final playerDirection = Vector(
+      x: position.x + sin(angle) * mapScale,
+      y: position.y + cos(angle) * mapScale,
     );
 
-    canvas.drawLine(position, playerDirection, paint);
+    canvas.drawLine(position.toOffset, playerDirection.toOffset, paint);
   }
 
   ({List<Ray> rays, List<Projection> projections}) castRay() {
@@ -35,8 +36,8 @@ class Player {
 
     final startAngle = angle - halfFov;
     final endAngle = angle + halfFov;
-    final rayStartX = (position.dx / mapScale).floor() * mapScale;
-    final rayStartY = (position.dy / mapScale).floor() * mapScale;
+    final rayStartX = (position.x / mapScale).floor() * mapScale;
+    final rayStartY = (position.y / mapScale).floor() * mapScale;
 
     var verticalDepth = 0.0;
     var horizontalDepth = 0.0;
@@ -66,8 +67,8 @@ class Player {
       }
 
       for (var offset = 0.0; offset < mapRange; offset += mapScale) {
-        verticalDepth = (rayEndX - position.dx) / currentSin;
-        rayEndY = position.dy + verticalDepth * currentCos;
+        verticalDepth = (rayEndX - position.x) / currentSin;
+        rayEndY = position.y + verticalDepth * currentCos;
 
         var mapTargetX = (rayEndX / mapScale).floor();
         final mapTargetY = (rayEndY / mapScale).floor();
@@ -105,8 +106,8 @@ class Player {
       }
 
       for (var offset = 0.0; offset < mapRange; offset += mapScale) {
-        horizontalDepth = (rayEndY - position.dy) / currentCos;
-        rayEndX = position.dx + horizontalDepth * currentSin;
+        horizontalDepth = (rayEndY - position.y) / currentCos;
+        rayEndX = position.x + horizontalDepth * currentSin;
 
         final mapTargetX = (rayEndX / mapScale).floor();
         var mapTargetY = (rayEndY / mapScale).floor();
@@ -140,7 +141,7 @@ class Player {
       final wallHeight = min(mapScale * wallHeightMultiplier / depth, infinity);
       final isVertical = verticalDepth > horizontalDepth;
 
-      rays.add(Ray(start: position, end: Offset(endX, endY)));
+      rays.add(Ray(start: position, end: Vector(x: endX, y: endY)));
 
       projections.add(
         Projection(
@@ -186,18 +187,18 @@ class Player {
     }
 
     if (controller.forward) {
-      final nextPosition = Offset(
-        position.dx + sin(angle) * playerSpeed,
-        position.dy + cos(angle) * playerSpeed,
+      final nextPosition = Vector(
+        x: position.x + sin(angle) * playerSpeed,
+        y: position.y + cos(angle) * playerSpeed,
       );
 
       if (_isPositionValid(nextPosition)) {
         position = nextPosition;
       }
     } else if (controller.backward) {
-      final nextPosition = Offset(
-        position.dx - sin(angle) * playerSpeed,
-        position.dy - cos(angle) * playerSpeed,
+      final nextPosition = Vector(
+        x: position.x - sin(angle) * playerSpeed,
+        y: position.y - cos(angle) * playerSpeed,
       );
 
       if (_isPositionValid(nextPosition)) {
@@ -208,11 +209,11 @@ class Player {
     angle = angle % (2 * pi);
   }
 
-  bool _isPositionValid(Offset position) {
-    final rowLeft = ((position.dy - playerRadius) / mapScale).floor();
-    final columnTop = ((position.dx - playerRadius) / mapScale).floor();
-    final rowRight = ((position.dy + playerRadius) / mapScale).floor();
-    final columnBottom = ((position.dx + playerRadius) / mapScale).floor();
+  bool _isPositionValid(Vector position) {
+    final rowLeft = ((position.y - playerRadius) / mapScale).floor();
+    final columnTop = ((position.x - playerRadius) / mapScale).floor();
+    final rowRight = ((position.y + playerRadius) / mapScale).floor();
+    final columnBottom = ((position.x + playerRadius) / mapScale).floor();
 
     return map[rowLeft * mapSize + columnTop] == 0 &&
         map[rowLeft * mapSize + columnBottom] == 0 &&
