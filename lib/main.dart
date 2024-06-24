@@ -10,7 +10,6 @@ import 'package:flutter_3d_raycast_engine/map_editor.dart';
 import 'package:flutter_3d_raycast_engine/mini_map_renderer.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
 import 'package:flutter_3d_raycast_engine/renderer.dart';
-import 'package:statsfl/statsfl.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +33,6 @@ class _MainAppState extends State<MainApp> {
 
   bool showMiniMap = true;
   bool enableTexture = true;
-  bool showStats = true;
 
   @override
   void initState() {
@@ -61,11 +59,6 @@ class _MainAppState extends State<MainApp> {
               event is KeyDownEvent) {
             enableTexture = !enableTexture;
           }
-
-          if (event.logicalKey == LogicalKeyboardKey.digit3 &&
-              event is KeyDownEvent) {
-            showStats = !showStats;
-          }
         },
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -78,17 +71,13 @@ class _MainAppState extends State<MainApp> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(margin),
-                        child: StatsFl(
-                          isEnabled: showStats,
-                          align: Alignment.topRight,
-                          child: ClipRect(
-                            child: CustomPaint(
-                              painter: Renderer(
-                                player: player,
-                                enableTexture: enableTexture,
-                              ),
-                              size: screenSize,
+                        child: ClipRect(
+                          child: CustomPaint(
+                            painter: Renderer(
+                              player: player,
+                              enableTexture: enableTexture,
                             ),
+                            size: screenSize,
                           ),
                         ),
                       ),
@@ -102,7 +91,7 @@ class _MainAppState extends State<MainApp> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: Padding(
-                        padding: const EdgeInsets.all(margin * 2),
+                        padding: const EdgeInsets.all(margin * 4),
                         child: CustomPaint(
                           painter: MiniMapRenderer(player: player, map: map),
                         ),

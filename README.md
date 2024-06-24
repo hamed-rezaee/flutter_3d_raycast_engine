@@ -39,7 +39,6 @@ flutter run
 - **Rotate Right:** D
 - **Toggle Minimap:** 1
 - **Toggle Textures:** 2
-- **Toggle Status:** 3
 
 ## Map Editor
 

@@ -20,14 +20,15 @@ class MiniMapRenderer extends CustomPainter {
   }
 
   void _drawMap(Canvas canvas) {
-    canvas.drawRect(
-      const Rect.fromLTWH(
-        -margin / 2,
-        -margin / 2,
-        mapSize * mapScale + margin,
-        mapSize * mapScale + margin,
+    canvas.drawRRect(
+      RRect.fromLTRBR(
+        -margin,
+        -margin,
+        mapRange + margin,
+        mapRange + margin,
+        const Radius.circular(4),
       ),
-      Paint()..color = Colors.white,
+      Paint()..color = Colors.black.withOpacity(0.5),
     );
 
     final size = map.length ~/ mapSize;
