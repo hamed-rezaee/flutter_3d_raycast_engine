@@ -25,7 +25,7 @@ const double mapRange = mapScale * mapSize;
 const double editorScale = 8;
 
 const double playerSpeed = 0.4;
-const double playerRotationSpeed = 0.02;
+const double playerRotationSpeed = 0.03;
 const double playerRadius = mapScale / 4;
 
 const double textureScale = 64;

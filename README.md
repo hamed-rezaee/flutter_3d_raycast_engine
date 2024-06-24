@@ -35,8 +35,8 @@ flutter run
 
 - **Move Forward:** W
 - **Move Backward:** S
-- **Strafe Left:** A
-- **Strafe Right:** D
+- **Rotate Left:** A
+- **Rotate Right:** D
 - **Toggle Minimap:** 1
 - **Toggle Textures:** 2
 - **Toggle Status:** 3

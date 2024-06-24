@@ -16,8 +16,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   playerSprite = await loadImageFromAsset('assets/textures/pistol.png');
-  map.addAll(await loadMap());
   assets.addAll(await Asset.loadAssets());
+  map.addAll(await loadMap());
 
   runApp(const MainApp());
 }
@@ -70,44 +70,46 @@ class _MainAppState extends State<MainApp> {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Scaffold(
-            body: Stack(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(margin),
-                      child: StatsFl(
-                        isEnabled: showStats,
-                        align: Alignment.topRight,
-                        child: ClipRect(
-                          child: CustomPaint(
-                            painter: Renderer(
-                              player: player,
-                              enableTexture: enableTexture,
+            body: SingleChildScrollView(
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(margin),
+                        child: StatsFl(
+                          isEnabled: showStats,
+                          align: Alignment.topRight,
+                          child: ClipRect(
+                            child: CustomPaint(
+                              painter: Renderer(
+                                player: player,
+                                enableTexture: enableTexture,
+                              ),
+                              size: screenSize,
                             ),
-                            size: screenSize,
                           ),
                         ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(margin),
-                      child: MapEditor(),
-                    ),
-                  ],
-                ),
-                if (showMiniMap)
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(margin * 2),
-                      child: CustomPaint(
-                        painter: MiniMapRenderer(player: player, map: map),
+                      const Padding(
+                        padding: EdgeInsets.all(margin),
+                        child: MapEditor(),
+                      ),
+                    ],
+                  ),
+                  if (showMiniMap)
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(margin * 2),
+                        child: CustomPaint(
+                          painter: MiniMapRenderer(player: player, map: map),
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

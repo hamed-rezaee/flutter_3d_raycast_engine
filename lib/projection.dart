@@ -24,34 +24,26 @@ class Projection {
   }) {
     const maxDepth = mapScale * mapSize + epsilon;
 
-    if (enableTexture) {
-      final shadingIntensity = (1 - depth / maxDepth).clamp(0.0, 1.0);
-      final shadeValue = (255 * shadingIntensity).toInt();
-      final shadedColor =
-          Color.fromARGB(255, shadeValue, shadeValue, shadeValue);
+    final shadedColor = getColorBasedOnDepth(
+      color: Colors.grey[isVertical ? 200 : 500]!,
+      depth: depth,
+      maxDepth: maxDepth,
+    );
 
-      final sourceRect =
-          Rect.fromLTWH(textureOffset % textureScale, 0, 1, textureScale);
-      final destinationRect =
-          Rect.fromLTWH(offset, (height - wallHeight) / 2, 1, wallHeight);
+    final sourceRect =
+        Rect.fromLTWH(textureOffset % textureScale, 0, 1, textureScale);
+    final destinationRect =
+        Rect.fromLTWH(offset, (height - wallHeight) / 2, 1, wallHeight);
 
-      canvas.drawImageRect(
-        assets[textureIndex].image!,
-        sourceRect,
-        destinationRect,
-        Paint()
-          ..colorFilter = ColorFilter.mode(shadedColor, BlendMode.modulate),
-      );
-    } else {
-      canvas.drawRect(
-        Rect.fromLTWH(offset, (height - wallHeight) / 2, 1, wallHeight),
-        Paint()
-          ..color = getColorBasedOnDepth(
-            color: assets[textureIndex].color,
-            depth: depth,
-            maxDepth: maxDepth,
-          ),
-      );
-    }
+    canvas.drawImageRect(
+      assets[textureIndex].image!,
+      sourceRect,
+      destinationRect,
+      Paint()
+        ..colorFilter = ColorFilter.mode(
+          shadedColor,
+          enableTexture ? BlendMode.modulate : BlendMode.src,
+        ),
+    );
   }
 }
