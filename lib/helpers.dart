@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Color getColorBasedOnDepth({

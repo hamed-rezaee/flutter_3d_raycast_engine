@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_3d_raycast_engine/asset.dart';
-import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/controller.dart';
 import 'package:flutter_3d_raycast_engine/helpers.dart';
 import 'package:flutter_3d_raycast_engine/map_editor.dart';

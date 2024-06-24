@@ -1,8 +1,10 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_3d_raycast_engine/asset.dart';
+import 'package:flutter_3d_raycast_engine/vector.dart';
 
 const double width = 700;
 const double height = 500;
@@ -14,7 +16,7 @@ const Size halfScreenSize = Size(width / 2, height / 2);
 const double fps = 60;
 const int cycleDelay = 1000 ~/ fps;
 
-const double fov = 1;
+const double fov = pi / 3;
 const double halfFov = fov / 2;
 const double rayStep = fov / width;
 const double wallHeightMultiplier = 800;
@@ -35,7 +37,7 @@ const double infinity = 10000;
 
 final List<int> map = [];
 
-const Offset playerPosition = Offset(mapSize / 2, mapSize / 2);
+final Vector playerPosition = Vector(x: mapSize / 2, y: mapSize / 2);
 
 late ui.Image playerSprite;
 

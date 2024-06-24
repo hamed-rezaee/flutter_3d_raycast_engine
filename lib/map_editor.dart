@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/asset.dart';
-import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/helpers.dart';
 
 const Size size = Size(editorScale * mapSize, editorScale * mapSize);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_3d_raycast_engine/constants.dart';
+import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
 
 class MiniMapRenderer extends CustomPainter {
