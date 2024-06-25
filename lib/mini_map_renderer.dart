@@ -17,7 +17,7 @@ class MiniMapRenderer extends CustomPainter {
     _drawMap(canvas);
 
     player.drawInMiniMap(canvas);
-    player.castRay().rays.forEach((ray) => ray.draw(canvas));
+    player.castRayWall().rays.forEach((ray) => ray.draw(canvas));
   }
 
   void _drawMap(Canvas canvas) {

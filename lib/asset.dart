@@ -20,14 +20,20 @@ class Asset {
     final sprites = <Asset>[
       Asset(
         index: 0,
-        name: 'Player',
+        name: 'Empty',
         color: Colors.transparent,
-        image: await loadImageFromAsset('assets/sprites/player.png'),
+        image: null,
       ),
       Asset(
         index: 1,
+        name: 'Player',
+        color: Colors.red,
+        image: await loadImageFromAsset('assets/sprites/player.png'),
+      ),
+      Asset(
+        index: 2,
         name: 'Steven',
-        color: Colors.transparent,
+        color: Colors.blue,
         image: await loadImageFromAsset('assets/sprites/steven.png'),
       ),
     ];

@@ -12,6 +12,9 @@ class Renderer extends CustomPainter {
     _drawSky(canvas, size);
     _drawGround(canvas, size);
     _drawWalls(canvas);
+    _drawSprites(canvas);
+
+    player.drawPistol(canvas);
   }
 
   void _drawSky(Canvas canvas, Size size) {
@@ -42,12 +45,24 @@ class Renderer extends CustomPainter {
       );
 
   void _drawWalls(Canvas canvas) {
-    final projections = player.castRay().projections;
+    final projections = player.castRayWall().projections;
 
     for (var i = 0; i < projections.length; i++) {
       projections[i].draw(
         canvas,
         projections.length - i - 1,
+        enableTexture: enableTexture,
+      );
+    }
+  }
+
+  void _drawSprites(Canvas canvas) {
+    final sprites = player.castRaySprite();
+
+    for (var i = 0; i < sprites.length; i++) {
+      sprites[i].draw(
+        canvas,
+        sprites.length - i - 1,
         enableTexture: enableTexture,
       );
     }

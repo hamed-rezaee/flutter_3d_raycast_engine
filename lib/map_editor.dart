@@ -13,7 +13,8 @@ class MapEditor extends StatefulWidget {
 }
 
 class _MapEditorState extends State<MapEditor> {
-  int selectedMaterial = materials.last.index;
+  int? selectedMaterial = materials.last.index;
+  int? selectedSprite;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -67,11 +68,31 @@ class _MapEditorState extends State<MapEditor> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (final asset in materials)
-                          _assetPicker(
-                            asset: asset,
-                            onTap: () =>
-                                setState(() => selectedMaterial = asset.index),
+                        for (final material in materials)
+                          _materialPicker(
+                            material: material,
+                            onTap: () {
+                              selectedSprite = null;
+                              selectedMaterial = material.index;
+
+                              setState(() {});
+                            },
+                          ),
+                      ],
+                    ),
+                    const SizedBox(width: margin * 2),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final sprite in sprites)
+                          _spritePicker(
+                            sprite: sprite,
+                            onTap: () {
+                              selectedMaterial = null;
+                              selectedSprite = sprite.index;
+
+                              setState(() {});
+                            },
                           ),
                       ],
                     ),
@@ -115,8 +136,15 @@ class _MapEditorState extends State<MapEditor> {
     final column = (event.localPosition.dx / editorScale).floor();
 
     if (row >= 0 && row < mapSize && column >= 0 && column < mapSize) {
-      map[row * mapSize + column].materialIndex =
-          event.buttons == 1 ? selectedMaterial : 0;
+      if (selectedMaterial != null) {
+        map[row * mapSize + column].materialIndex =
+            event.buttons == 1 ? selectedMaterial! : 0;
+      }
+
+      if (selectedSprite != null) {
+        map[row * mapSize + column].spriteIndex =
+            event.buttons == 1 ? selectedSprite! : 0;
+      }
 
       setState(() {});
     }
@@ -127,14 +155,24 @@ class _MapEditorState extends State<MapEditor> {
     final column = (event.localPosition.dx / editorScale).floor();
 
     if (row >= 0 && row < mapSize && column >= 0 && column < mapSize) {
-      map[row * mapSize + column].materialIndex =
-          event.buttons == 1 ? selectedMaterial : 0;
+      if (selectedMaterial != null) {
+        map[row * mapSize + column].materialIndex =
+            event.buttons == 1 ? selectedMaterial! : 0;
+      }
+
+      if (selectedSprite != null) {
+        map[row * mapSize + column].spriteIndex =
+            event.buttons == 1 ? selectedSprite! : 0;
+      }
 
       setState(() {});
     }
   }
 
-  Widget _assetPicker({required Asset asset, required VoidCallback onTap}) =>
+  Widget _materialPicker({
+    required Asset material,
+    required VoidCallback onTap,
+  }) =>
       GestureDetector(
         onTap: onTap,
         child: Row(
@@ -143,10 +181,10 @@ class _MapEditorState extends State<MapEditor> {
               width: 16,
               height: 16,
               decoration: BoxDecoration(
-                color: asset.color,
+                color: material.color,
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
-                  color: selectedMaterial == asset.index
+                  color: selectedMaterial == material.index
                       ? Colors.black
                       : Colors.transparent,
                 ),
@@ -154,10 +192,41 @@ class _MapEditorState extends State<MapEditor> {
             ),
             const SizedBox(width: margin),
             Text(
-              asset.name,
+              material.name,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: selectedMaterial == asset.index
+                color: selectedMaterial == material.index
+                    ? Colors.green
+                    : Colors.black,
+              ),
+            ),
+          ],
+        ),
+      );
+  Widget _spritePicker({required Asset sprite, required VoidCallback onTap}) =>
+      GestureDetector(
+        onTap: onTap,
+        child: Row(
+          children: [
+            Container(
+              width: 16,
+              height: 16,
+              decoration: BoxDecoration(
+                color: sprite.color,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                  color: selectedMaterial == sprite.index
+                      ? Colors.black
+                      : Colors.transparent,
+                ),
+              ),
+            ),
+            const SizedBox(width: margin),
+            Text(
+              sprite.name,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: selectedSprite == sprite.index
                     ? Colors.green
                     : Colors.black,
               ),
