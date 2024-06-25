@@ -4,14 +4,14 @@ import 'package:flutter_3d_raycast_engine/helpers.dart';
 
 class Projection {
   const Projection({
-    required this.textureIndex,
+    required this.materialIndex,
     required this.depth,
     required this.wallHeight,
     required this.textureOffset,
     required this.isVertical,
   });
 
-  final int textureIndex;
+  final int materialIndex;
   final double depth;
   final double wallHeight;
   final double textureOffset;
@@ -36,7 +36,7 @@ class Projection {
         Rect.fromLTWH(offset, (height - wallHeight) / 2, 1, wallHeight);
 
     canvas.drawImageRect(
-      assets[textureIndex].image!,
+      materials[materialIndex].image!,
       sourceRect,
       destinationRect,
       Paint()

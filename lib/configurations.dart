@@ -1,9 +1,9 @@
 import 'dart:math';
-import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_3d_raycast_engine/asset.dart';
+import 'package:flutter_3d_raycast_engine/map_information.dart';
 import 'package:flutter_3d_raycast_engine/vector.dart';
 
 const double width = 700;
@@ -35,10 +35,9 @@ const double textureScale = 64;
 const double epsilon = 0.0001;
 const double infinity = 10000;
 
-final List<int> map = [];
+final List<MapInformation> map = [];
 
 final Vector playerPosition = Vector(x: mapSize / 2, y: mapSize / 2);
 
-late ui.Image playerSprite;
-
-final List<Asset> assets = [];
+final List<Asset> materials = [];
+final List<Asset> sprites = [];

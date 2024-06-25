@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
 
 class Renderer extends CustomPainter {
@@ -13,7 +12,6 @@ class Renderer extends CustomPainter {
     _drawSky(canvas, size);
     _drawGround(canvas, size);
     _drawWalls(canvas);
-    _drawPlayer(canvas);
   }
 
   void _drawSky(Canvas canvas, Size size) {
@@ -53,29 +51,6 @@ class Renderer extends CustomPainter {
         enableTexture: enableTexture,
       );
     }
-  }
-
-  void _drawPlayer(Canvas canvas) {
-    final sourceRect = Rect.fromLTWH(
-      0,
-      0,
-      playerSprite.width.toDouble(),
-      playerSprite.height.toDouble(),
-    );
-
-    final destinationRect = Rect.fromLTWH(
-      screenSize.width / 2 - playerSprite.width / 2,
-      screenSize.height - playerSprite.height * 2,
-      playerSprite.width * 2,
-      playerSprite.height * 2,
-    );
-
-    canvas.drawImageRect(
-      playerSprite,
-      sourceRect,
-      destinationRect,
-      Paint(),
-    );
   }
 
   @override

@@ -21,4 +21,5 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/sprites/
     - assets/textures/

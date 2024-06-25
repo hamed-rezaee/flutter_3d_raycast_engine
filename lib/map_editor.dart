@@ -13,7 +13,7 @@ class MapEditor extends StatefulWidget {
 }
 
 class _MapEditorState extends State<MapEditor> {
-  int selectedMaterial = assets.last.index;
+  int selectedMaterial = materials.last.index;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -67,7 +67,7 @@ class _MapEditorState extends State<MapEditor> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (final asset in assets)
+                        for (final asset in materials)
                           _assetPicker(
                             asset: asset,
                             onTap: () =>
@@ -115,7 +115,8 @@ class _MapEditorState extends State<MapEditor> {
     final column = (event.localPosition.dx / editorScale).floor();
 
     if (row >= 0 && row < mapSize && column >= 0 && column < mapSize) {
-      map[row * mapSize + column] = event.buttons == 1 ? selectedMaterial : 0;
+      map[row * mapSize + column].materialIndex =
+          event.buttons == 1 ? selectedMaterial : 0;
 
       setState(() {});
     }
@@ -126,7 +127,8 @@ class _MapEditorState extends State<MapEditor> {
     final column = (event.localPosition.dx / editorScale).floor();
 
     if (row >= 0 && row < mapSize && column >= 0 && column < mapSize) {
-      map[row * mapSize + column] = event.buttons == 1 ? selectedMaterial : 0;
+      map[row * mapSize + column].materialIndex =
+          event.buttons == 1 ? selectedMaterial : 0;
 
       setState(() {});
     }
@@ -182,7 +184,9 @@ class MapEditorPainter extends CustomPainter {
               editorScale,
               editorScale,
             ),
-            Paint()..color = assets[map[row * mapSize + column]].color,
+            Paint()
+              ..color =
+                  materials[map[row * mapSize + column].materialIndex].color,
           )
           ..drawRect(
             Rect.fromLTWH(

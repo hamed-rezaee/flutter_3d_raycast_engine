@@ -16,7 +16,26 @@ class Asset {
   final Color color;
   final ui.Image? image;
 
-  static Future<List<Asset>> loadAssets() async {
+  static Future<List<Asset>> loadSprites() async {
+    final sprites = <Asset>[
+      Asset(
+        index: 0,
+        name: 'Player',
+        color: Colors.transparent,
+        image: await loadImageFromAsset('assets/sprites/player.png'),
+      ),
+      Asset(
+        index: 1,
+        name: 'Steven',
+        color: Colors.transparent,
+        image: await loadImageFromAsset('assets/sprites/steven.png'),
+      ),
+    ];
+
+    return sprites;
+  }
+
+  static Future<List<Asset>> loadMaterials() async {
     final assets = <Asset>[
       Asset(
         index: 0,

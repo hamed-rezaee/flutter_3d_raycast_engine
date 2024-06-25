@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/configurations.dart';
+import 'package:flutter_3d_raycast_engine/map_information.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Color getColorBasedOnDepth({
@@ -55,22 +56,45 @@ Future<ui.Image> loadImageFromAsset(String assetName) async {
   return frame.image;
 }
 
-List<int> generateMap() => List.generate(
+List<MapInformation> generateMap() => List.generate(
       mapSize * mapSize,
       (index) => index % mapSize == 0 ||
               index % mapSize == mapSize - 1 ||
               index < mapSize ||
               index >= mapSize * (mapSize - 1)
-          ? assets.last.index
-          : assets.first.index,
+          ? MapInformation(materialIndex: materials.last.index)
+          : MapInformation(),
     );
 
-Future<void> saveMap(List<int> map) async =>
-    (await SharedPreferences.getInstance())
-        .setStringList('map', map.map((e) => e.toString()).toList());
+Future<void> saveMap(List<MapInformation> map) async {
+  await (await SharedPreferences.getInstance()).setStringList(
+    'map_material',
+    map.map((e) => e.materialIndex.toString()).toList(),
+  );
 
-Future<List<int>> loadMap() async {
-  final map = (await SharedPreferences.getInstance()).getStringList('map');
+  await (await SharedPreferences.getInstance()).setStringList(
+    'map_sprite',
+    map.map((e) => e.spriteIndex.toString()).toList(),
+  );
+}
 
-  return map?.map(int.parse).toList() ?? generateMap();
+Future<List<MapInformation>> loadMap() async {
+  final map =
+      (await SharedPreferences.getInstance()).getStringList('map_material');
+  final sprite =
+      (await SharedPreferences.getInstance()).getStringList('map_sprite');
+
+  final emptyMap = generateMap();
+
+  if (map == null || sprite == null) {
+    return emptyMap;
+  } else {
+    return List.generate(
+      emptyMap.length,
+      (index) => MapInformation(
+        materialIndex: int.parse(map[index]),
+        spriteIndex: int.parse(sprite[index]),
+      ),
+    );
+  }
 }

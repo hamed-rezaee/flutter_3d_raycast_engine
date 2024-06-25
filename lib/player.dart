@@ -15,7 +15,7 @@ class Player {
   Vector position = Vector(x: mapScale * 2, y: mapScale * 2);
   double angle = pi / 4;
 
-  void draw(Canvas canvas) {
+  void drawInMiniMap(Canvas canvas) {
     final paint = Paint()
       ..color = Colors.red
       ..strokeWidth = playerRadius;
@@ -83,8 +83,8 @@ class Player {
           break;
         }
 
-        if (map[targetSquare] != 0) {
-          textureY = map[targetSquare];
+        if (map[targetSquare].materialIndex != 0) {
+          textureY = map[targetSquare].materialIndex;
 
           break;
         }
@@ -122,8 +122,8 @@ class Player {
           break;
         }
 
-        if (map[targetSquare] != 0) {
-          textureX = map[targetSquare];
+        if (map[targetSquare].materialIndex != 0) {
+          textureX = map[targetSquare].materialIndex;
 
           break;
         }
@@ -145,7 +145,7 @@ class Player {
 
       projections.add(
         Projection(
-          textureIndex: isVertical ? textureX : textureY,
+          materialIndex: isVertical ? textureX : textureY,
           depth: depth,
           wallHeight: wallHeight,
           textureOffset:
@@ -215,9 +215,9 @@ class Player {
     final rowRight = ((position.y + playerRadius) / mapScale).floor();
     final columnBottom = ((position.x + playerRadius) / mapScale).floor();
 
-    return map[rowLeft * mapSize + columnTop] == 0 &&
-        map[rowLeft * mapSize + columnBottom] == 0 &&
-        map[rowRight * mapSize + columnTop] == 0 &&
-        map[rowRight * mapSize + columnBottom] == 0;
+    return map[rowLeft * mapSize + columnTop].materialIndex == 0 &&
+        map[rowLeft * mapSize + columnBottom].materialIndex == 0 &&
+        map[rowRight * mapSize + columnTop].materialIndex == 0 &&
+        map[rowRight * mapSize + columnBottom].materialIndex == 0;
   }
 }

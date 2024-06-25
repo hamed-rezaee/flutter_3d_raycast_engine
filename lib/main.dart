@@ -14,8 +14,8 @@ import 'package:flutter_3d_raycast_engine/renderer.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  playerSprite = await loadImageFromAsset('assets/textures/pistol.png');
-  assets.addAll(await Asset.loadAssets());
+  sprites.addAll(await Asset.loadSprites());
+  materials.addAll(await Asset.loadMaterials());
   map.addAll(await loadMap());
 
   runApp(const MainApp());
