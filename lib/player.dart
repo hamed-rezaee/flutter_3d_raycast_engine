@@ -280,19 +280,19 @@ class Player {
     }
 
     if (event.logicalKey == LogicalKeyboardKey.keyA) {
-      controller.strafeLeft = event is KeyRepeatEvent || event is KeyDownEvent;
-    }
-
-    if (event.logicalKey == LogicalKeyboardKey.keyD) {
-      controller.strafeRight = event is KeyRepeatEvent || event is KeyDownEvent;
-    }
-
-    if (event.logicalKey == LogicalKeyboardKey.keyQ) {
       controller.rotateLeft = event is KeyRepeatEvent || event is KeyDownEvent;
     }
 
-    if (event.logicalKey == LogicalKeyboardKey.keyE) {
+    if (event.logicalKey == LogicalKeyboardKey.keyD) {
       controller.rotateRight = event is KeyRepeatEvent || event is KeyDownEvent;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.keyQ) {
+      controller.strafeLeft = event is KeyRepeatEvent || event is KeyDownEvent;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.keyE) {
+      controller.strafeRight = event is KeyRepeatEvent || event is KeyDownEvent;
     }
   }
 
@@ -305,18 +305,6 @@ class Player {
       angle -= playerRotationSpeed;
     }
 
-    if (controller.strafeLeft) {
-      nextPosition = Vector(
-        x: position.x + cos(angle) * playerSpeed,
-        y: position.y - sin(angle) * playerSpeed,
-      );
-    } else if (controller.strafeRight) {
-      nextPosition = Vector(
-        x: position.x - cos(angle) * playerSpeed,
-        y: position.y + sin(angle) * playerSpeed,
-      );
-    }
-
     if (controller.forward) {
       nextPosition = Vector(
         x: position.x + sin(angle) * playerSpeed,
@@ -326,6 +314,18 @@ class Player {
       nextPosition = Vector(
         x: position.x - sin(angle) * playerSpeed,
         y: position.y - cos(angle) * playerSpeed,
+      );
+    }
+
+    if (controller.strafeLeft) {
+      nextPosition = Vector(
+        x: position.x + cos(angle) * playerSpeed,
+        y: position.y - sin(angle) * playerSpeed,
+      );
+    } else if (controller.strafeRight) {
+      nextPosition = Vector(
+        x: position.x - cos(angle) * playerSpeed,
+        y: position.y + sin(angle) * playerSpeed,
       );
     }
 
