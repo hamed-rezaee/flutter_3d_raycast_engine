@@ -16,7 +16,7 @@ class Sprite {
   final Vector position;
   final Player player;
 
-  void draw(Canvas canvas, double offset) {
+  void draw(Canvas canvas) {
     final sprite = sprites[spriteIndex].image;
 
     if (sprite == null) {
@@ -30,7 +30,7 @@ class Sprite {
     final dy = spriteY - player.position.y;
     final spriteDistance = sqrt(dx * dx + dy * dy);
     final spriteAngle = atan2(dy, dx) - player.angle;
-    final size = viewDistance / (cos(spriteAngle) * spriteDistance);
+    final size = viewDistance / spriteDistance;
 
     final sourceRect = Rect.fromLTWH(
       0,
@@ -40,7 +40,7 @@ class Sprite {
     );
 
     final destinationRect = Rect.fromLTWH(
-      offset + width / 2 - size / 2,
+      width / 2 - spriteAngle * width / fov,
       height / 2,
       size,
       size,

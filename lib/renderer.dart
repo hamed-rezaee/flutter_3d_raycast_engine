@@ -65,7 +65,7 @@ class Renderer extends CustomPainter {
     ];
 
     for (var i = 0; i < sprites.length; i++) {
-      sprites[i].draw(canvas, sprites.length - i - 1);
+      sprites[i].draw(canvas);
     }
   }
 
