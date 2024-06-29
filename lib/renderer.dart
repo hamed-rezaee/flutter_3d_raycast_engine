@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
 
 class Renderer extends CustomPainter {
@@ -13,8 +14,7 @@ class Renderer extends CustomPainter {
     _drawGround(canvas, size);
     _drawWalls(canvas);
     _drawSprites(canvas);
-
-    player.drawPistol(canvas);
+    _drawPistol(canvas);
   }
 
   void _drawSky(Canvas canvas, Size size) {
@@ -66,6 +66,29 @@ class Renderer extends CustomPainter {
         enableTexture: enableTexture,
       );
     }
+  }
+
+  void _drawPistol(Canvas canvas) {
+    final pistolSprite = sprites[1].image!;
+
+    final sourceRect = Rect.fromLTWH(
+      0,
+      0,
+      pistolSprite.width.toDouble(),
+      pistolSprite.height.toDouble(),
+    );
+    final destinationRect = Rect.fromLTWH(
+      screenSize.width / 2 - pistolSprite.width / 2,
+      screenSize.height - pistolSprite.height * 2,
+      pistolSprite.width * 2,
+      pistolSprite.height * 2,
+    );
+    canvas.drawImageRect(
+      pistolSprite,
+      sourceRect,
+      destinationRect,
+      Paint(),
+    );
   }
 
   @override

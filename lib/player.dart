@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/controller.dart';
@@ -15,44 +14,6 @@ class Player {
   Controller controller;
   Vector position = Vector(x: mapScale * 2, y: mapScale * 2);
   double angle = pi / 4;
-
-  void drawPistol(Canvas canvas) {
-    final pistolSprite = sprites[1].image!;
-
-    final sourceRect = Rect.fromLTWH(
-      0,
-      0,
-      pistolSprite.width.toDouble(),
-      pistolSprite.height.toDouble(),
-    );
-    final destinationRect = Rect.fromLTWH(
-      screenSize.width / 2 - pistolSprite.width / 2,
-      screenSize.height - pistolSprite.height * 2,
-      pistolSprite.width * 2,
-      pistolSprite.height * 2,
-    );
-    canvas.drawImageRect(
-      pistolSprite,
-      sourceRect,
-      destinationRect,
-      Paint(),
-    );
-  }
-
-  void drawInMiniMap(Canvas canvas) {
-    final paint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = playerRadius;
-
-    canvas.drawCircle(position.toOffset, mapScale / 2, paint);
-
-    final playerDirection = Vector(
-      x: position.x + sin(angle) * mapScale,
-      y: position.y + cos(angle) * mapScale,
-    );
-
-    canvas.drawLine(position.toOffset, playerDirection.toOffset, paint);
-  }
 
   List<Sprite> castRaySprite() {
     final sprites = <Sprite>[];
