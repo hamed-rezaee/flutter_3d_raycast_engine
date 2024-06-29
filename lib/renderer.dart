@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
+import 'package:flutter_3d_raycast_engine/sprite.dart';
 
 class Renderer extends CustomPainter {
   const Renderer({required this.player, required this.enableTexture});
@@ -57,14 +58,14 @@ class Renderer extends CustomPainter {
   }
 
   void _drawSprites(Canvas canvas) {
-    final sprites = player.castRaySprite();
+    if (spertePositions.isEmpty) return;
+
+    final sprites = [
+      Sprite(spriteIndex: 2, position: spertePositions.first, player: player),
+    ];
 
     for (var i = 0; i < sprites.length; i++) {
-      sprites[i].draw(
-        canvas,
-        sprites.length - i - 1,
-        enableTexture: enableTexture,
-      );
+      sprites[i].draw(canvas, sprites.length - i - 1);
     }
   }
 

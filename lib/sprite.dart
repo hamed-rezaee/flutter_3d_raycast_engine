@@ -1,38 +1,51 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/configurations.dart';
+import 'package:flutter_3d_raycast_engine/player.dart';
+import 'package:flutter_3d_raycast_engine/vector.dart';
 
 class Sprite {
   const Sprite({
     required this.spriteIndex,
-    required this.depth,
-    required this.wallHeight,
-    required this.textureOffset,
+    required this.position,
+    required this.player,
   });
 
   final int spriteIndex;
-  final double depth;
-  final double wallHeight;
-  final double textureOffset;
+  final Vector position;
+  final Player player;
 
-  void draw(
-    Canvas canvas,
-    double offset, {
-    required bool enableTexture,
-  }) {
-    if (sprites[spriteIndex].image == null) {
+  void draw(Canvas canvas, double offset) {
+    final sprite = sprites[spriteIndex].image;
+
+    if (sprite == null) {
       return;
     }
 
-    final sourceRect =
-        Rect.fromLTWH(textureOffset % textureScale, 0, 1, textureScale);
-    final destinationRect =
-        Rect.fromLTWH(offset, (height - wallHeight) / 2, 1, wallHeight);
+    final spriteX = (spertePositions[0].x + 0.5) * mapScale;
+    final spriteY = (spertePositions[0].y + 0.5) * mapScale;
 
-    canvas.drawImageRect(
-      sprites[spriteIndex].image!,
-      sourceRect,
-      destinationRect,
-      Paint(),
+    final dx = spriteX - player.position.x;
+    final dy = spriteY - player.position.y;
+    final spriteDistance = sqrt(dx * dx + dy * dy);
+    final spriteAngle = atan2(dy, dx) - player.angle;
+    final size = viewDistance / (cos(spriteAngle) * spriteDistance);
+
+    final sourceRect = Rect.fromLTWH(
+      0,
+      0,
+      sprite.width.toDouble(),
+      sprite.height.toDouble(),
     );
+
+    final destinationRect = Rect.fromLTWH(
+      offset + width / 2 - size / 2,
+      height / 2,
+      size,
+      size,
+    );
+
+    canvas.drawImageRect(sprite, sourceRect, destinationRect, Paint());
   }
 }

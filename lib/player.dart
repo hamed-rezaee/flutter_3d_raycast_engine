@@ -5,7 +5,6 @@ import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/controller.dart';
 import 'package:flutter_3d_raycast_engine/projection.dart';
 import 'package:flutter_3d_raycast_engine/ray.dart';
-import 'package:flutter_3d_raycast_engine/sprite.dart';
 import 'package:flutter_3d_raycast_engine/vector.dart';
 
 class Player {
@@ -14,130 +13,6 @@ class Player {
   Controller controller;
   Vector position = Vector(x: mapScale * 2, y: mapScale * 2);
   double angle = pi / 4;
-
-  List<Sprite> castRaySprite() {
-    final sprites = <Sprite>[];
-
-    final startAngle = angle - halfFov;
-    final endAngle = angle + halfFov;
-    final rayStartX = (position.x / mapScale).floor() * mapScale;
-    final rayStartY = (position.y / mapScale).floor() * mapScale;
-
-    var verticalDepth = 0.0;
-    var horizontalDepth = 0.0;
-
-    for (var currentAngle = startAngle;
-        currentAngle < endAngle;
-        currentAngle += rayStep) {
-      var spriteY = 0;
-      var spriteX = 0;
-
-      var currentSin = sin(currentAngle);
-      currentSin = currentSin != 0 ? currentSin : epsilon;
-
-      var currentCos = cos(currentAngle);
-      currentCos = currentCos != 0 ? currentCos : epsilon;
-
-      var rayEndX = 0.0;
-      var rayEndY = 0.0;
-      var rayDirectionX = 0;
-
-      if (currentSin > 0) {
-        rayEndX = rayStartX + mapScale;
-        rayDirectionX = 1;
-      } else {
-        rayEndX = rayStartX;
-        rayDirectionX = -1;
-      }
-
-      for (var offset = 0.0; offset < mapRange; offset += mapScale) {
-        verticalDepth = (rayEndX - position.x) / currentSin;
-        rayEndY = position.y + verticalDepth * currentCos;
-
-        var mapTargetX = (rayEndX / mapScale).floor();
-        final mapTargetY = (rayEndY / mapScale).floor();
-
-        if (currentSin <= 0) {
-          mapTargetX += rayDirectionX;
-        }
-
-        final targetSquare = mapTargetY * mapSize + mapTargetX;
-
-        if (targetSquare < 0 || targetSquare >= map.length) {
-          break;
-        }
-
-        if (map[targetSquare].spriteIndex != 0) {
-          spriteY = map[targetSquare].spriteIndex;
-
-          break;
-        }
-
-        rayEndX += rayDirectionX * mapScale;
-      }
-
-      final tempX = rayEndX;
-      final tempY = rayEndY;
-
-      int rayDirectionY;
-
-      if (currentCos > 0) {
-        rayEndY = rayStartY + mapScale;
-        rayDirectionY = 1;
-      } else {
-        rayEndY = rayStartY;
-        rayDirectionY = -1;
-      }
-
-      for (var offset = 0.0; offset < mapRange; offset += mapScale) {
-        horizontalDepth = (rayEndY - position.y) / currentCos;
-        rayEndX = position.x + horizontalDepth * currentSin;
-
-        final mapTargetX = (rayEndX / mapScale).floor();
-        var mapTargetY = (rayEndY / mapScale).floor();
-
-        if (currentCos <= 0) {
-          mapTargetY += rayDirectionY;
-        }
-
-        final targetSquare = mapTargetY * mapSize + mapTargetX;
-
-        if (targetSquare < 0 || targetSquare >= map.length) {
-          break;
-        }
-
-        if (map[targetSquare].spriteIndex != 0) {
-          spriteX = map[targetSquare].spriteIndex;
-
-          break;
-        }
-
-        rayEndY += rayDirectionY * mapScale;
-      }
-
-      final endX = verticalDepth < horizontalDepth ? tempX : rayEndX;
-      final endY = verticalDepth < horizontalDepth ? tempY : rayEndY;
-
-      var depth =
-          verticalDepth < horizontalDepth ? verticalDepth : horizontalDepth;
-      depth *= cos(angle - currentAngle);
-
-      final wallHeight = min(mapScale * wallHeightMultiplier / depth, infinity);
-      final isVertical = verticalDepth > horizontalDepth;
-
-      sprites.add(
-        Sprite(
-          spriteIndex: isVertical ? spriteX : spriteY,
-          depth: depth,
-          wallHeight: wallHeight,
-          textureOffset:
-              _calculateTextureOffset(isVertical, endY, endX).floorToDouble(),
-        ),
-      );
-    }
-
-    return sprites;
-  }
 
   ({List<Ray> rays, List<Projection> projections}) castRayWall() {
     final rays = <Ray>[];

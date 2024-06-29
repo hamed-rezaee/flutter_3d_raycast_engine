@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/asset.dart';
 import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/helpers.dart';
+import 'package:flutter_3d_raycast_engine/vector.dart';
 
 const Size size = Size(editorScale * mapSize, editorScale * mapSize);
 
@@ -144,6 +145,8 @@ class _MapEditorState extends State<MapEditor> {
       if (selectedSprite != null) {
         map[row * mapSize + column].spriteIndex =
             event.buttons == 1 ? selectedSprite! : 0;
+
+        spertePositions.add(Vector(x: column.toDouble(), y: row.toDouble()));
       }
 
       setState(() {});
@@ -163,6 +166,8 @@ class _MapEditorState extends State<MapEditor> {
       if (selectedSprite != null) {
         map[row * mapSize + column].spriteIndex =
             event.buttons == 1 ? selectedSprite! : 0;
+
+        spertePositions.add(Vector(x: column.toDouble(), y: row.toDouble()));
       }
 
       setState(() {});
