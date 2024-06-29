@@ -17,11 +17,10 @@ class MiniMapRenderer extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    _drawMap(canvas);
-
     player.castRayWall().rays.forEach((ray) => ray.draw(canvas));
-
     _drawPlayer(canvas);
+
+    _drawMap(canvas);
   }
 
   void _drawMap(Canvas canvas) {
@@ -40,12 +39,28 @@ class MiniMapRenderer extends CustomPainter {
 
     for (var row = 0; row < size; row++) {
       for (var column = 0; column < size; column++) {
-        canvas.drawRect(
-          Rect.fromLTWH(column * mapScale, row * mapScale, mapScale, mapScale),
-          Paint()
-            ..color =
-                materials[map[row * mapSize + column].materialIndex].color,
-        );
+        canvas
+          ..drawRect(
+            Rect.fromLTWH(
+              column * mapScale,
+              row * mapScale,
+              mapScale,
+              mapScale,
+            ),
+            Paint()
+              ..color =
+                  materials[map[row * mapSize + column].materialIndex].color,
+          )
+          ..drawCircle(
+            Offset(
+              column * mapScale + mapScale / 2,
+              row * mapScale + mapScale / 2,
+            ),
+            mapScale / 3,
+            Paint()
+              ..color =
+                  materials[map[row * mapSize + column].spriteIndex].color,
+          );
       }
     }
   }

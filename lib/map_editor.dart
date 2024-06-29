@@ -133,20 +133,29 @@ class _MapEditorState extends State<MapEditor> {
       );
 
   void _onPointerMoveHandler(PointerEvent event) {
+    final isLeftClick = event.buttons == 1;
+
     final row = (event.localPosition.dy / editorScale).floor();
     final column = (event.localPosition.dx / editorScale).floor();
 
     if (row >= 0 && row < mapSize && column >= 0 && column < mapSize) {
       if (selectedMaterial != null) {
-        map[row * mapSize + column].materialIndex =
-            event.buttons == 1 ? selectedMaterial! : 0;
+        map[row * mapSize + column].materialIndex = map[row * mapSize + column]
+            .materialIndex = isLeftClick ? selectedMaterial! : 0;
       }
 
       if (selectedSprite != null) {
         map[row * mapSize + column].spriteIndex =
-            event.buttons == 1 ? selectedSprite! : 0;
+            isLeftClick ? selectedSprite! : 0;
 
-        spertePositions.add(Vector(x: column.toDouble(), y: row.toDouble()));
+        isLeftClick
+            ? spertePositions
+                .add(Vector(x: column.toDouble(), y: row.toDouble()))
+            : spertePositions.removeWhere(
+                (element) =>
+                    element.x == column.toDouble() &&
+                    element.y == row.toDouble(),
+              );
       }
 
       setState(() {});
@@ -154,20 +163,29 @@ class _MapEditorState extends State<MapEditor> {
   }
 
   void _onPointerDownHandler(PointerDownEvent event) {
+    final isLeftClick = event.buttons == 1;
+
     final row = (event.localPosition.dy / editorScale).floor();
     final column = (event.localPosition.dx / editorScale).floor();
 
     if (row >= 0 && row < mapSize && column >= 0 && column < mapSize) {
       if (selectedMaterial != null) {
         map[row * mapSize + column].materialIndex =
-            event.buttons == 1 ? selectedMaterial! : 0;
+            isLeftClick ? selectedMaterial! : 0;
       }
 
       if (selectedSprite != null) {
         map[row * mapSize + column].spriteIndex =
-            event.buttons == 1 ? selectedSprite! : 0;
+            isLeftClick ? selectedSprite! : 0;
 
-        spertePositions.add(Vector(x: column.toDouble(), y: row.toDouble()));
+        isLeftClick
+            ? spertePositions
+                .add(Vector(x: column.toDouble(), y: row.toDouble()))
+            : spertePositions.removeWhere(
+                (element) =>
+                    element.x == column.toDouble() &&
+                    element.y == row.toDouble(),
+              );
       }
 
       setState(() {});
@@ -244,10 +262,11 @@ class _MapEditorState extends State<MapEditor> {
 class MapEditorPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    _drawMap(canvas);
+    _drawWalls(canvas);
+    _drawObjects(canvas);
   }
 
-  void _drawMap(Canvas canvas) {
+  void _drawWalls(Canvas canvas) {
     for (var row = 0; row < mapSize; row++) {
       for (var column = 0; column < mapSize; column++) {
         canvas
@@ -274,6 +293,24 @@ class MapEditorPainter extends CustomPainter {
               ..strokeWidth = 0.1
               ..style = PaintingStyle.stroke,
           );
+      }
+    }
+  }
+
+  void _drawObjects(Canvas canvas) {
+    for (var row = 0; row < mapSize; row++) {
+      for (var column = 0; column < mapSize; column++) {
+        if (map[row * mapSize + column].spriteIndex != 0) {
+          canvas.drawCircle(
+            Offset(
+              column * editorScale + editorScale / 2,
+              row * editorScale + editorScale / 2,
+            ),
+            editorScale / 3,
+            Paint()
+              ..color = sprites[map[row * mapSize + column].spriteIndex].color,
+          );
+        }
       }
     }
   }
