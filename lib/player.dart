@@ -280,39 +280,57 @@ class Player {
     }
 
     if (event.logicalKey == LogicalKeyboardKey.keyA) {
-      controller.rotateLeft = event is KeyRepeatEvent || event is KeyDownEvent;
+      controller.strafeLeft = event is KeyRepeatEvent || event is KeyDownEvent;
     }
 
     if (event.logicalKey == LogicalKeyboardKey.keyD) {
+      controller.strafeRight = event is KeyRepeatEvent || event is KeyDownEvent;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.keyQ) {
+      controller.rotateLeft = event is KeyRepeatEvent || event is KeyDownEvent;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.keyE) {
       controller.rotateRight = event is KeyRepeatEvent || event is KeyDownEvent;
     }
   }
 
   void update() {
+    var nextPosition = position;
+
     if (controller.rotateLeft) {
       angle += playerRotationSpeed;
     } else if (controller.rotateRight) {
       angle -= playerRotationSpeed;
     }
 
+    if (controller.strafeLeft) {
+      nextPosition = Vector(
+        x: position.x + cos(angle) * playerSpeed,
+        y: position.y - sin(angle) * playerSpeed,
+      );
+    } else if (controller.strafeRight) {
+      nextPosition = Vector(
+        x: position.x - cos(angle) * playerSpeed,
+        y: position.y + sin(angle) * playerSpeed,
+      );
+    }
+
     if (controller.forward) {
-      final nextPosition = Vector(
+      nextPosition = Vector(
         x: position.x + sin(angle) * playerSpeed,
         y: position.y + cos(angle) * playerSpeed,
       );
-
-      if (_isPositionValid(nextPosition)) {
-        position = nextPosition;
-      }
     } else if (controller.backward) {
-      final nextPosition = Vector(
+      nextPosition = Vector(
         x: position.x - sin(angle) * playerSpeed,
         y: position.y - cos(angle) * playerSpeed,
       );
+    }
 
-      if (_isPositionValid(nextPosition)) {
-        position = nextPosition;
-      }
+    if (_isPositionValid(nextPosition)) {
+      position = nextPosition;
     }
 
     angle = angle % (2 * pi);

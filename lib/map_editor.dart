@@ -34,7 +34,7 @@ class _MapEditorState extends State<MapEditor> {
         const Divider(),
         const SizedBox(height: margin),
         const Text(
-          '\t- Press W, A, S, D to move the player\n\t- Press 1 to toggle Minimap\n\t- Press 2 to toggle texture',
+          '\t- Press W, A, S, D, Q, E to move the player\n\t- Press 1 to toggle Minimap\n\t- Press 2 to toggle texture',
           style: TextStyle(fontSize: 12),
         ),
         const SizedBox(height: margin),

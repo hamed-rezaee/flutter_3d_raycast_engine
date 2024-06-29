@@ -35,15 +35,16 @@ flutter run
 
 - **Move Forward:** W
 - **Move Backward:** S
-- **Rotate Left:** A
-- **Rotate Right:** D
+- **Strafe Left:** A
+- **Strafe Right:** D
+- **Rotate Left:** Q
+- **Rotate Right:** E
 - **Toggle Minimap:** 1
 - **Toggle Textures:** 2
 
 ## Map Editor
 
 The map editor allows you to create custom maps interactively.
-
 
 ## Demo
 
