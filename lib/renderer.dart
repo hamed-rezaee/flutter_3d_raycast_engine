@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
-import 'package:flutter_3d_raycast_engine/sprite.dart';
+import 'package:flutter_3d_raycast_engine/sprite_manager.dart';
 
 class Renderer extends CustomPainter {
-  const Renderer({required this.player, required this.enableTexture});
+  const Renderer({
+    required this.player,
+    required this.spriteManager,
+    required this.enableTexture,
+  });
 
   final Player player;
+  final SpriteManager spriteManager;
   final bool enableTexture;
 
   @override
@@ -14,7 +19,7 @@ class Renderer extends CustomPainter {
     _drawSky(canvas, size);
     _drawGround(canvas, size);
     _drawWalls(canvas);
-    _drawSprites(canvas);
+    spriteManager.draw(canvas, player, map);
     _drawPistol(canvas);
   }
 
@@ -54,18 +59,6 @@ class Renderer extends CustomPainter {
         projections.length - i - 1,
         enableTexture: enableTexture,
       );
-    }
-  }
-
-  void _drawSprites(Canvas canvas) {
-    if (spertePositions.isEmpty) return;
-
-    final sprites = [
-      Sprite(spriteIndex: 2, position: spertePositions.first, player: player),
-    ];
-
-    for (var i = 0; i < sprites.length; i++) {
-      sprites[i].draw(canvas);
     }
   }
 

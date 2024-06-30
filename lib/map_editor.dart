@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_3d_raycast_engine/asset.dart';
 import 'package:flutter_3d_raycast_engine/configurations.dart';
 import 'package:flutter_3d_raycast_engine/helpers.dart';
-import 'package:flutter_3d_raycast_engine/vector.dart';
 
 const Size size = Size(editorScale * mapSize, editorScale * mapSize);
 
@@ -63,13 +62,24 @@ class _MapEditorState extends State<MapEditor> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomPaint(painter: MapEditorPainter(), size: size),
                     const SizedBox(width: margin * 2),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (final material in materials)
+                        const Text(
+                          'Materials',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: margin),
+                        for (final material
+                            in materials.where((e) => e.showInEditor))
                           _materialPicker(
                             material: material,
                             onTap: () {
@@ -81,11 +91,21 @@ class _MapEditorState extends State<MapEditor> {
                           ),
                       ],
                     ),
-                    const SizedBox(width: margin * 2),
+                    const VerticalDivider(),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (final sprite in sprites)
+                        const Text(
+                          'Sprites',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: margin),
+                        for (final sprite
+                            in sprites.where((e) => e.showInEditor))
                           _spritePicker(
                             sprite: sprite,
                             onTap: () {
@@ -147,15 +167,6 @@ class _MapEditorState extends State<MapEditor> {
       if (selectedSprite != null) {
         map[row * mapSize + column].spriteIndex =
             isLeftClick ? selectedSprite! : 0;
-
-        isLeftClick
-            ? spertePositions
-                .add(Vector(x: column.toDouble(), y: row.toDouble()))
-            : spertePositions.removeWhere(
-                (element) =>
-                    element.x == column.toDouble() &&
-                    element.y == row.toDouble(),
-              );
       }
 
       setState(() {});
@@ -177,15 +188,6 @@ class _MapEditorState extends State<MapEditor> {
       if (selectedSprite != null) {
         map[row * mapSize + column].spriteIndex =
             isLeftClick ? selectedSprite! : 0;
-
-        isLeftClick
-            ? spertePositions
-                .add(Vector(x: column.toDouble(), y: row.toDouble()))
-            : spertePositions.removeWhere(
-                (element) =>
-                    element.x == column.toDouble() &&
-                    element.y == row.toDouble(),
-              );
       }
 
       setState(() {});

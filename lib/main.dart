@@ -10,6 +10,7 @@ import 'package:flutter_3d_raycast_engine/map_editor.dart';
 import 'package:flutter_3d_raycast_engine/mini_map_renderer.dart';
 import 'package:flutter_3d_raycast_engine/player.dart';
 import 'package:flutter_3d_raycast_engine/renderer.dart';
+import 'package:flutter_3d_raycast_engine/sprite_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +31,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   final Player player = Player(Controller());
+  final SpriteManager spriteManager = SpriteManager();
 
   bool showMiniMap = true;
   bool enableTexture = true;
@@ -75,6 +77,7 @@ class _MainAppState extends State<MainApp> {
                           child: CustomPaint(
                             painter: Renderer(
                               player: player,
+                              spriteManager: spriteManager,
                               enableTexture: enableTexture,
                             ),
                             size: screenSize,

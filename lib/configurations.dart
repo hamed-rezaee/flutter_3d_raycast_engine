@@ -43,5 +43,3 @@ final Vector playerPosition = Vector(x: mapSize / 2, y: mapSize / 2);
 
 final List<Asset> materials = [];
 final List<Asset> sprites = [];
-
-List<Vector> spertePositions = [];
