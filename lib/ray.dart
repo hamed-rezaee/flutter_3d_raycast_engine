@@ -9,8 +9,8 @@ class Ray {
 
   void draw(Canvas canvas) {
     final paint = Paint()
-      ..color = Colors.yellow
-      ..strokeWidth = 0.1;
+      ..color = Colors.white
+      ..strokeWidth = 0.07;
 
     canvas.drawLine(start.toOffset, end.toOffset, paint);
   }
