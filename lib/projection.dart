@@ -25,7 +25,7 @@ class Projection {
     const maxDepth = mapScale * mapSize + epsilon;
 
     final shadedColor = getColorBasedOnDepth(
-      color: Colors.grey[isVertical ? 200 : 500]!,
+      color: Colors.grey[isVertical ? 100 : 400]!,
       depth: depth,
       maxDepth: maxDepth,
     );
