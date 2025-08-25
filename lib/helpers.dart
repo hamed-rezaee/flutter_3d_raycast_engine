@@ -13,7 +13,8 @@ Color getColorBasedOnDepth({
   required double maxDepth,
   double adjustment = 0.1,
 }) {
-  final ratio = (1 - depth / (maxDepth + epsilon)) + adjustment;
+  final invMaxDepth = 1.0 / (maxDepth + epsilon);
+  final ratio = (1 - depth * invMaxDepth) + adjustment;
 
   var red = ((color.r * 255.0) * ratio).round();
   var green = ((color.g * 255.0) * ratio).round();
@@ -26,14 +27,21 @@ Color getColorBasedOnDepth({
   return Color.fromARGB(255, red, green, blue);
 }
 
+final Map<String, Future<ui.Image>> _imageCache = {};
 Future<ui.Image> loadImageFromAsset(String assetName) async {
+  if (_imageCache.containsKey(assetName)) {
+    return _imageCache[assetName]!;
+  }
+
+  final completer = Completer<ui.Image>();
+
+  _imageCache[assetName] = completer.future;
+
   if (kIsWeb) {
     WidgetsFlutterBinding.ensureInitialized();
-
     final image = AssetImage(assetName);
     final key = await image.obtainKey(ImageConfiguration.empty);
 
-    final completer = Completer<ui.Image>();
     image.loadBuffer(
       key,
       (buffer,
@@ -45,56 +53,66 @@ Future<ui.Image> loadImageFromAsset(String assetName) async {
         (image, synchronousCall) => completer.complete(image.image),
       ),
     );
-
-    return completer.future;
+  } else {
+    final buffer = await ui.ImmutableBuffer.fromAsset(assetName);
+    final codec = await ui.instantiateImageCodecWithSize(buffer);
+    final frame = await codec.getNextFrame();
+    completer.complete(frame.image);
   }
 
-  final buffer = await ui.ImmutableBuffer.fromAsset(assetName);
-  final codec = await ui.instantiateImageCodecWithSize(buffer);
-  final frame = await codec.getNextFrame();
-
-  return frame.image;
+  return completer.future;
 }
 
-List<MapInformation> generateMap() => List.generate(
-      mapSize * mapSize,
-      (index) => index % mapSize == 0 ||
-              index % mapSize == mapSize - 1 ||
-              index < mapSize ||
-              index >= mapSize * (mapSize - 1)
-          ? MapInformation(materialIndex: materials.last.index)
-          : MapInformation(),
-    );
+List<MapInformation>? _cachedMap;
+List<MapInformation> generateMap() {
+  if (_cachedMap != null) return List<MapInformation>.from(_cachedMap!);
+  _cachedMap = List.generate(
+    mapSize * mapSize,
+    (index) => index % mapSize == 0 ||
+            index % mapSize == mapSize - 1 ||
+            index < mapSize ||
+            index >= mapSize * (mapSize - 1)
+        ? MapInformation(materialIndex: materials.last.index)
+        : MapInformation(),
+  );
+
+  return List<MapInformation>.from(_cachedMap!);
+}
+
+Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
 Future<void> saveMap(List<MapInformation> map) async {
-  await (await SharedPreferences.getInstance()).setStringList(
-    'map_material',
-    map.map((e) => e.materialIndex.toString()).toList(),
-  );
+  final prefs = await _prefs;
+  final materialList =
+      List<String>.generate(map.length, (i) => map[i].materialIndex.toString());
+  final spriteList =
+      List<String>.generate(map.length, (i) => map[i].spriteIndex.toString());
 
-  await (await SharedPreferences.getInstance()).setStringList(
-    'map_sprite',
-    map.map((e) => e.spriteIndex.toString()).toList(),
-  );
+  await prefs.setStringList('map_material', materialList);
+  await prefs.setStringList('map_sprite', spriteList);
 }
 
 Future<List<MapInformation>> loadMap() async {
-  final map =
-      (await SharedPreferences.getInstance()).getStringList('map_material');
-  final sprite =
-      (await SharedPreferences.getInstance()).getStringList('map_sprite');
-
+  final prefs = await _prefs;
+  final materialList = prefs.getStringList('map_material');
+  final spriteList = prefs.getStringList('map_sprite');
   final emptyMap = generateMap();
 
-  if (map == null || sprite == null) {
+  if (materialList == null || spriteList == null) {
     return emptyMap;
-  } else {
-    return List.generate(
-      emptyMap.length,
-      (index) => MapInformation(
-        materialIndex: int.parse(map[index]),
-        spriteIndex: int.parse(sprite[index]),
-      ),
-    );
   }
+
+  final len = emptyMap.length;
+
+  if (materialList.length != len || spriteList.length != len) {
+    return emptyMap;
+  }
+
+  return List.generate(
+    len,
+    (index) => MapInformation(
+      materialIndex: int.parse(materialList[index]),
+      spriteIndex: int.parse(spriteList[index]),
+    ),
+  );
 }
