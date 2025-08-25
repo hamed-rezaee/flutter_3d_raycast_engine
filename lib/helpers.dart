@@ -15,9 +15,9 @@ Color getColorBasedOnDepth({
 }) {
   final ratio = (1 - depth / (maxDepth + epsilon)) + adjustment;
 
-  var red = (color.red * ratio).toInt();
-  var green = (color.green * ratio).toInt();
-  var blue = (color.blue * ratio).toInt();
+  var red = ((color.r * 255.0) * ratio).round();
+  var green = ((color.g * 255.0) * ratio).round();
+  var blue = ((color.b * 255.0) * ratio).round();
 
   red = red.clamp(0, 255);
   green = green.clamp(0, 255);
@@ -34,23 +34,23 @@ Future<ui.Image> loadImageFromAsset(String assetName) async {
     final key = await image.obtainKey(ImageConfiguration.empty);
 
     final completer = Completer<ui.Image>();
-    image
-        .loadBuffer(
-          key,
-          // ignore: deprecated_member_use
-          PaintingBinding.instance.instantiateImageCodecFromBuffer,
-        )
-        .addListener(
-          ImageStreamListener(
-            (image, synchronousCall) => completer.complete(image.image),
-          ),
-        );
+    image.loadBuffer(
+      key,
+      (buffer,
+          {int? cacheWidth, int? cacheHeight, bool allowUpscaling = false}) {
+        return PaintingBinding.instance.instantiateImageCodecWithSize(buffer);
+      },
+    ).addListener(
+      ImageStreamListener(
+        (image, synchronousCall) => completer.complete(image.image),
+      ),
+    );
 
     return completer.future;
   }
 
   final buffer = await ui.ImmutableBuffer.fromAsset(assetName);
-  final codec = await ui.instantiateImageCodecFromBuffer(buffer);
+  final codec = await ui.instantiateImageCodecWithSize(buffer);
   final frame = await codec.getNextFrame();
 
   return frame.image;

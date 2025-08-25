@@ -32,7 +32,7 @@ class MiniMapRenderer extends CustomPainter {
         mapRange + margin,
         const Radius.circular(4),
       ),
-      Paint()..color = Colors.black.withOpacity(0.5),
+      Paint()..color = Colors.black.withValues(alpha: 0.5),
     );
 
     final size = map.length ~/ mapSize;

@@ -21,7 +21,7 @@ const double halfFov = fov / 2;
 const double rayStep = fov / width;
 const double wallHeightMultiplier = 800;
 
-final viewDistance = (width * 1.5) / tan(halfFov);
+final double viewDistance = (width * 1.5) / tan(halfFov);
 
 const int mapSize = 32;
 const double mapScale = 4;

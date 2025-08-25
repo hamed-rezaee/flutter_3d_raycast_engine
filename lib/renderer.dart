@@ -30,7 +30,7 @@ class Renderer extends CustomPainter {
         ..shader = LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Colors.black, Colors.black.withOpacity(0.7)],
+          colors: [Colors.black, Colors.black.withValues(alpha: 0.7)],
         ).createShader(Rect.fromLTWH(0, 0, size.width, size.height / 2)),
     );
   }
@@ -43,7 +43,7 @@ class Renderer extends CustomPainter {
             end: Alignment.bottomCenter,
             colors: [
               const Color.fromARGB(255, 39, 13, 3),
-              const Color.fromARGB(255, 39, 13, 3).withOpacity(0.8),
+              const Color.fromARGB(255, 39, 13, 3).withValues(alpha: 0.8),
             ],
           ).createShader(
             Rect.fromLTWH(0, size.height / 2, size.width, size.height / 2),
