@@ -15,6 +15,9 @@ import 'package:flutter_3d_raycast_engine/sprite_manager.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  skybox = await Asset.loadSkyboxTexture();
+  ground = await Asset.loadGroundTexture();
+
   sprites.addAll(await Asset.loadSprites());
   materials.addAll(await Asset.loadMaterials());
   map.addAll(await loadMap());
@@ -63,12 +66,13 @@ class _MainAppState extends State<MainApp> {
           }
         },
         child: MaterialApp(
+          theme: ThemeData.dark(),
           debugShowCheckedModeBanner: false,
           home: Scaffold(
             body: SingleChildScrollView(
               child: Stack(
                 children: [
-                  Column(
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
@@ -79,6 +83,10 @@ class _MainAppState extends State<MainApp> {
                               player: player,
                               spriteManager: spriteManager,
                               enableTexture: enableTexture,
+                              skyboxImage: skybox,
+                              groundImage: ground,
+                              playerPosition: player.position,
+                              playerAngle: player.angle,
                             ),
                             size: screenSize,
                           ),

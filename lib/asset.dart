@@ -12,6 +12,12 @@ class Asset {
     this.showInEditor = true,
   });
 
+  static Future<ui.Image> loadSkyboxTexture() async =>
+      loadImageFromAsset('assets/textures/skybox.png');
+
+  static Future<ui.Image> loadGroundTexture() async =>
+      loadImageFromAsset('assets/textures/ground.png');
+
   final int index;
   final String name;
   final Color color;

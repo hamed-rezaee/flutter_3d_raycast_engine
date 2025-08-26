@@ -210,7 +210,7 @@ class _MapEditorState extends State<MapEditor> {
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
                   color: selectedMaterial == material.index
-                      ? Colors.black
+                      ? Colors.white
                       : Colors.transparent,
                 ),
               ),
@@ -222,7 +222,7 @@ class _MapEditorState extends State<MapEditor> {
                 fontWeight: FontWeight.bold,
                 color: selectedMaterial == material.index
                     ? Colors.green
-                    : Colors.black,
+                    : Colors.white,
               ),
             ),
           ],
@@ -241,7 +241,7 @@ class _MapEditorState extends State<MapEditor> {
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
                   color: selectedMaterial == sprite.index
-                      ? Colors.black
+                      ? Colors.white
                       : Colors.transparent,
                 ),
               ),
@@ -253,7 +253,7 @@ class _MapEditorState extends State<MapEditor> {
                 fontWeight: FontWeight.bold,
                 color: selectedSprite == sprite.index
                     ? Colors.green
-                    : Colors.black,
+                    : Colors.white,
               ),
             ),
           ],
@@ -291,7 +291,7 @@ class MapEditorPainter extends CustomPainter {
               editorScale,
             ),
             Paint()
-              ..color = Colors.black
+              ..color = Colors.white
               ..strokeWidth = 0.1
               ..style = PaintingStyle.stroke,
           );

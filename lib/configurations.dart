@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -43,3 +44,5 @@ final Vector playerPosition = Vector(x: mapSize / 2, y: mapSize / 2);
 
 final List<Asset> materials = [];
 final List<Asset> sprites = [];
+ui.Image? skybox;
+ui.Image? ground;
